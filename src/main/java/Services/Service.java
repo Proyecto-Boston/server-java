@@ -96,7 +96,37 @@ public class Service  implements IService {
 
     @Override
     public Response verifySession(String token) {
-        return null;
+        Response response = new Response();
+        String url = URLS.getAuthServerUrl() + "/Auth";
+        String body = "{\"token_jwt\": \"%s\"}".formatted(token);
+
+        try{
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder ()
+                    .uri(URI.create(url))
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpResponse<String> res = client.send(request, HttpResponse.BodyHandlers.ofString());
+            JSONObject resJSON = new JSONObject(res.body());
+
+
+            response.statusCode = res.statusCode();
+            if(response.statusCode == 202){
+                response.details = "Token JWT valido";
+            }else if(response.statusCode == 400){
+                response.details = resJSON.getString("message");
+            }
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.statusCode = 400;
+        response.details = "Error al procesar la solicitud";
+        System.out.println(response.details);
+        return response;
     }
 
     @Override
