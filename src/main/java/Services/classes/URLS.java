@@ -1,3 +1,5 @@
+package Services.classes;
+
 public class URLS {
     private static String authServerUrl;
     private static String dbServerUrl;

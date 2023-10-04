@@ -1,14 +1,15 @@
 package Services;
 
-import Services.classes.File;
-import Services.classes.Folder;
-import Services.classes.Response;
-import Services.classes.User;
+import Services.classes.*;
 
 import javax.jws.WebService;
 
 @WebService
 public class Service  implements IService {
+
+    public Service(){
+        URLS.init();
+    }
 
     @Override
     public Response login(User user) {
