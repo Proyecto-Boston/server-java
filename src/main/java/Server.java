@@ -15,6 +15,6 @@ public class Server {
         usuario.name = "Ejemplo";
         usuario.surname = "DePrueba";
 
-        service.register(usuario);
+        //service.registerUserDB(usuario);
     }
 }

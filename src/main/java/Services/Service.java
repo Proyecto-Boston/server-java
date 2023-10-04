@@ -164,5 +164,28 @@ public class Service  implements IService {
 
     }
 
-    private db
+    // TODO: Look for a way to resend register request in case the DB gives an error Status Code
+    private int registerUserDB(User user){
+        Response response = new Response();
+        String url = URLS.getDbServerUrl() + "/user/register";
+        System.out.println(url);
+        String body = "{\"nombre\": \"%s\", \"apellido\": \"%s\"}".formatted(user.name, user.surname);
+
+        try{
+            HttpResponse<String> res = postRequest(url, body);
+            if(res == null) return 400;
+            JSONObject resJSON = new JSONObject(res.body());
+
+
+            int statusCode = res.statusCode();
+
+            System.out.println(statusCode);
+            return statusCode;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(400);
+        return 400;
+    }
 }
