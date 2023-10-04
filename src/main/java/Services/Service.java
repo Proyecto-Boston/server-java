@@ -19,26 +19,20 @@ import java.net.http.HttpRequest;
 @WebService
 public class Service  implements IService {
 
-    public Service(){
-        URLS.init();
-    }
+    public Service(){ URLS.init(); }
 
     @Override
     public Response login(User user) {
         Response response = new Response();
+        response.statusCode = 400;
+        response.details = "Error al procesar la solicitud";
+
         String url = URLS.getAuthServerUrl() + "/Login";
         String body = "{\"email\": \"%s\", \"password\": \"%s\"}".formatted(user.email,user.password);
 
         try{
-            HttpClient client = HttpClient.newHttpClient();
-
-            HttpRequest request = HttpRequest.newBuilder ()
-                    .uri(URI.create(url))
-                    .POST(HttpRequest.BodyPublishers.ofString(body))
-                    .header("Content-Type", "application/json")
-                    .build();
-
-            HttpResponse<String> res = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> res = postRequest(url, body);
+            if(res == null) return response;
             JSONObject resJSON = new JSONObject(res.body());
 
             response.statusCode = res.statusCode();
@@ -53,8 +47,7 @@ public class Service  implements IService {
         }catch (Exception e) {
             e.printStackTrace();
         }
-        response.statusCode = 400;
-        response.details = "Error al procesar la solicitud";
+
         return response;
     }
 
@@ -65,15 +58,8 @@ public class Service  implements IService {
         String body = "{\"email\": \"%s\", \"password\": \"%s\"}".formatted(user.email, user.password);
 
         try{
-            HttpClient client = HttpClient.newHttpClient();
-
-            HttpRequest request = HttpRequest.newBuilder ()
-                    .uri(URI.create(url))
-                    .POST(HttpRequest.BodyPublishers.ofString(body))
-                    .header("Content-Type", "application/json")
-                    .build();
-
-            HttpResponse<String> res = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> res = postRequest(url, body);
+            if(res == null) return response;
             JSONObject resJSON = new JSONObject(res.body());
 
 
@@ -101,15 +87,8 @@ public class Service  implements IService {
         String body = "{\"token_jwt\": \"%s\"}".formatted(token);
 
         try{
-            HttpClient client = HttpClient.newHttpClient();
-
-            HttpRequest request = HttpRequest.newBuilder ()
-                    .uri(URI.create(url))
-                    .POST(HttpRequest.BodyPublishers.ofString(body))
-                    .header("Content-Type", "application/json")
-                    .build();
-
-            HttpResponse<String> res = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> res = postRequest(url, body);
+            if(res == null) return response;
             JSONObject resJSON = new JSONObject(res.body());
 
 
@@ -172,5 +151,24 @@ public class Service  implements IService {
     @Override
     public Response seeStorageTree() {
         return null;
+    }
+
+    private HttpResponse<String> postRequest(String url, String body){
+        try{
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder ()
+                    .uri(URI.create(url))
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpResponse<String> res = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return res;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 }
