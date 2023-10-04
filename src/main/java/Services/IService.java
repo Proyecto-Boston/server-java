@@ -8,7 +8,7 @@ import javax.jws.WebService;
 @WebService
 public interface IService {
     @WebMethod
-    Response login(User user);
+    Response login(String email, String password);
     @WebMethod
     Response register(User user);
     @WebMethod

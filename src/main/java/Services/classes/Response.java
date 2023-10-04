@@ -1,7 +1,11 @@
 package Services.classes;
 
-public class Response {
-    int statusCode;
-    String details;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 
+
+public class Response {
+    public int statusCode;
+    public String details;
+    public String json;
 }
