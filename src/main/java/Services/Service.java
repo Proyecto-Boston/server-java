@@ -24,10 +24,10 @@ public class Service  implements IService {
     }
 
     @Override
-    public Response login(String email, String password) {
+    public Response login(User user) {
         Response response = new Response();
         String url = URLS.getAuthServerUrl() + "/Login";
-        String body = "{\"email\": \"%s\", \"password\": \"%s\"}".formatted(email,password);
+        String body = "{\"email\": \"%s\", \"password\": \"%s\"}".formatted(user.email,user.password);
 
         try{
             HttpClient client = HttpClient.newHttpClient();
@@ -60,7 +60,38 @@ public class Service  implements IService {
 
     @Override
     public Response register(User user) {
-        return null;
+        Response response = new Response();
+        String url = URLS.getAuthServerUrl() + "/Register";
+        String body = "{\"email\": \"%s\", \"password\": \"%s\"}".formatted(user.email, user.password);
+
+        try{
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder ()
+                    .uri(URI.create(url))
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpResponse<String> res = client.send(request, HttpResponse.BodyHandlers.ofString());
+            JSONObject resJSON = new JSONObject(res.body());
+
+
+            response.statusCode = res.statusCode();
+            if(response.statusCode == 201){
+                response.details = "Usuario registrado exitosamente";
+            }else if(response.statusCode == 400){
+                response.details = resJSON.getString("message");
+            }
+            System.out.println(response.details);
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.statusCode = 400;
+        response.details = "Error al procesar la solicitud";
+        System.out.println(response.details);
+        return response;
     }
 
     @Override
