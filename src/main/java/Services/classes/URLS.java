@@ -18,8 +18,8 @@ public class URLS {
     }
 
     public static void init(){
-        authServerUrl = System.getenv().getOrDefault("AUTH_SERVER", "http://127.0.0.1");
-        dbServerUrl = System.getenv().getOrDefault("BD_SERVER", "http://127.0.0.1");
+        authServerUrl = System.getenv().getOrDefault("AUTH_SERVER", "http://34.102.54.195/auth");
+        dbServerUrl = System.getenv().getOrDefault("BD_SERVER", "http://boston.bucaramanga.upb.edu.co");
         nodeUrl = System.getenv().getOrDefault("NODE_WORKER", "http://127.0.0.1");
     }
 }

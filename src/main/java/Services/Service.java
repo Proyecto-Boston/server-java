@@ -19,7 +19,7 @@ public class Service  implements IService {
         response.statusCode = 400;
         response.details = "Error al procesar la solicitud";
 
-        String url = URLS.getAuthServerUrl() + "/Login";
+        String url = URLS.getAuthServerUrl() + "/login";
         String body = "{\"email\": \"%s\", \"password\": \"%s\"}".formatted(user.email,user.password);
 
         try{
@@ -46,7 +46,7 @@ public class Service  implements IService {
     @Override
     public Response register(User user) {
         Response response = new Response();
-        String url = URLS.getAuthServerUrl() + "/Register";
+        String url = URLS.getAuthServerUrl() + "/register";
         String body = "{\"email\": \"%s\", \"password\": \"%s\"}".formatted(user.email, user.password);
 
         try{
@@ -75,7 +75,7 @@ public class Service  implements IService {
     @Override
     public Response verifySession(String token) {
         Response response = new Response();
-        String url = URLS.getAuthServerUrl() + "/Auth";
+        String url = URLS.getAuthServerUrl() + "/auth";
         String body = "{\"token_jwt\": \"%s\"}".formatted(token);
 
         try{
