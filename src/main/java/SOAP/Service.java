@@ -178,13 +178,42 @@ public class Service implements IService {
     @Override
     public Response downloadFile(File file) {
 
+        // TODO: Use RMI method in order to create the folder in the storage node
+
         return null;
     }
 
     @Override
-    public Response moveFile(String routeName) {
+    public Response moveFile(String routeName, int fileId) {
 
-        return null;
+        // TODO: Use RMI method in order to create the folder in the storage node
+
+        Response response = new Response();
+        response.statusCode = 500;
+        response.details = "Error de conexion.";
+
+        String url = URLS.getDbServerUrl() + "/file/move";
+        System.out.println(url);
+        String body = "{" +
+                "\"nuevaRuta\": \""+ routeName  + "\" " +
+                "\"tamano\":" + fileId + "," +
+                "}";
+
+        try{
+            HttpResponse<String> res = putRequest(url, body);
+            if(res == null){ return response; }
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
+
+            System.out.println(response.statusCode);
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
     @Override
@@ -227,8 +256,25 @@ public class Service implements IService {
                     .header("Content-Type", "application/json")
                     .build();
 
-            HttpResponse<String> res = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return res;
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    private HttpResponse<String> putRequest(String url, String body){
+        try{
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder ()
+                    .uri(URI.create(url))
+                    .PUT(HttpRequest.BodyPublishers.ofString(body))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
         }catch (Exception e) {
             e.printStackTrace();
         }
