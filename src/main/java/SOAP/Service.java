@@ -276,6 +276,47 @@ public class Service implements IService {
         return null;
     }
 
+    @Override
+    public Response getUserFiles(int userId){
+        Response response = new Response();
+        response.statusCode = 500;
+        response.details = "Error de conexion.";
+
+        String url = URLS.getDbServerUrl() + "/file/user/" + userId;
+
+        try{
+            HttpResponse<String> res = getRequest(url);
+            if(res == null){ return response; }
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
+            response.json = (response.statusCode == 200) ?  resJSON.toString() : resJSON.getString("message");
+
+            System.out.println(response.json);
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    private HttpResponse<String> getRequest(String url){
+        try{
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder ()
+                    .uri(URI.create(url))
+                    .build();
+
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
     private HttpResponse<String> postRequest(String url, String body){
         try{

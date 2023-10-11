@@ -38,5 +38,6 @@ public interface IService {
     Response stopSharingFile(int fileId);
     @WebMethod
     Response seeStorageTree(int rootFolder);
-    
+    @WebMethod
+    Response getUserFiles(int userId);
 }
