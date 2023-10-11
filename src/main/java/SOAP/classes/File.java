@@ -1,10 +1,12 @@
 package SOAP.classes;
 
 public class File {
-    int id;
-    String name;
-    String route;
-    int size;
-    int userId;
+    public int id;
+    public String name;
+    public String path;
+    public int size;
+    public int userId;
+    public int folderId;
+    public int nodeId;
 
 }

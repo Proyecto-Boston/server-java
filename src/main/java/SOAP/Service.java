@@ -114,22 +114,20 @@ public class Service implements IService {
 
         String url = URLS.getDbServerUrl() + "/directory/saveDirectories";
         System.out.println(url);
-        String body = "{" +
+        String body = "[{" +
                 "\"nombre\": \"" + folder.name + "\", " +
-                "\"ruta\": \""+ folder.path  + "\" " +
-                "\"usuario_id\": \""+ folder.userId  + "\" " +
-                "\"nodo_id\": \""+ folder.nodeId  + "\" " +
-                "}";
+                "\"ruta\": \""+ folder.path  + "\"," +
+                "\"usuario_id\": "+ folder.userId  + "," +
+                "\"nodo_id\": "+ folder.nodeId  +  "," +
+                "}]";
 
         try{
             HttpResponse<String> res = postRequest(url, body);
             if(res == null){ return response; }
             JSONObject resJSON = new JSONObject(res.body());
 
-
             response.statusCode = res.statusCode();
             response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Bad request";
-
 
             System.out.println(response.statusCode);
             return response;
@@ -143,7 +141,38 @@ public class Service implements IService {
     @Override
     public Response uploadFile(File file) {
 
-        return null;
+        // TODO: Use RMI method in order to create the folder in the storage node
+
+        Response response = new Response();
+        response.statusCode = 500;
+        response.details = "Error de conexion.";
+
+        String url = URLS.getDbServerUrl() + "/file/saveFiles";
+        System.out.println(url);
+        String body = "[{" +
+                "\"nombre\": \"" + file.name + "\", " +
+                "\"ruta\": \""+ file.path  + "\" " +
+                "\"tamano\":" + file.size + "," +
+                "\"usuario_id\": "+ file.userId  + ", " +
+                "\"nodo_id\": "+ file.nodeId  + "," +
+                "\"directorio_id\": " + file.folderId + "," +
+                "}]";
+
+        try{
+            HttpResponse<String> res = postRequest(url, body);
+            if(res == null){ return response; }
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Bad request";
+
+            System.out.println(response.statusCode);
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
     @Override
