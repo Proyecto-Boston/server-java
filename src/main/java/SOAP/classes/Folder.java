@@ -1,9 +1,10 @@
 package SOAP.classes;
 
 public class Folder {
-    int id;
-    String name;
-    String path;
-    int userId;
+    public int id;
+    public String name;
+    public String path;
+    public int userId;
+    public int nodeId;
 
 }

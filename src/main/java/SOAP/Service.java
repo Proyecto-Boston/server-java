@@ -105,31 +105,68 @@ public class Service implements IService {
 
     @Override
     public Response createFolder(Folder folder) {
-        return null;
+
+        // TODO: Use RMI method in order to create the folder in the storage node
+
+        Response response = new Response();
+        response.statusCode = 500;
+        response.details = "Error de conexion.";
+
+        String url = URLS.getDbServerUrl() + "/directory/saveDirectories";
+        System.out.println(url);
+        String body = "{" +
+                "\"nombre\": \"" + folder.name + "\", " +
+                "\"ruta\": \""+ folder.path  + "\" " +
+                "\"usuario_id\": \""+ folder.userId  + "\" " +
+                "\"nodo_id\": \""+ folder.nodeId  + "\" " +
+                "}";
+
+        try{
+            HttpResponse<String> res = postRequest(url, body);
+            if(res == null){ return response; }
+            JSONObject resJSON = new JSONObject(res.body());
+
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Bad request";
+
+
+            System.out.println(response.statusCode);
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
     @Override
     public Response uploadFile(File file) {
+
         return null;
     }
 
     @Override
     public Response downloadFile(File file) {
+
         return null;
     }
 
     @Override
     public Response moveFile(String routeName) {
+
         return null;
     }
 
     @Override
     public Response deleteFolder(Folder folder) {
+
         return null;
     }
 
     @Override
     public Response deleteFile(File file) {
+
         return null;
     }
 
@@ -141,6 +178,7 @@ public class Service implements IService {
 
     @Override
     public Response stopSharingFile() {
+
         return null;
     }
 
@@ -169,7 +207,7 @@ public class Service implements IService {
 
     }
 
-    // TODO: Look for a way to resend register request in case the DB gives an error Status Code
+    // TODO: Update
     public int registerUserDB(User user){
         Response response = new Response();
         String url = URLS.getDbServerUrl() + "/user/register";
