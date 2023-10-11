@@ -1,7 +1,8 @@
-import Services.Service;
-import Services.classes.User;
+import SOAP.Service;
+import SOAP.classes.User;
 
 import javax.xml.ws.Endpoint;
+
 
 public class Server {
     public static void main(String[] args) {
