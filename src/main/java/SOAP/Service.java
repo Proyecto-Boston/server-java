@@ -224,8 +224,33 @@ public class Service implements IService {
 
     @Override
     public Response deleteFile(File file) {
+        // TODO: Use RMI method in order to create the folder in the storage node
 
-        return null;
+        Response response = new Response();
+        response.statusCode = 500;
+        response.details = "Error de conexion.";
+
+        String url = URLS.getDbServerUrl() + "/file/move";
+        System.out.println(url);
+        String body = "{" +
+                "\"id\":" + file.id + "," +
+                "}";
+
+        try{
+            HttpResponse<String> res = putRequest(url, body);
+            if(res == null){ return response; }
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
+
+            System.out.println(response.statusCode);
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
     @Override
