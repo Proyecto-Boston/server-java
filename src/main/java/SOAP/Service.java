@@ -106,7 +106,7 @@ public class Service implements IService {
     @Override
     public Response createFolder(Folder folder) {
 
-        // TODO: Use RMI method in order to create the folder in the storage node
+        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
 
         Response response = new Response();
         response.statusCode = 500;
@@ -141,7 +141,7 @@ public class Service implements IService {
     @Override
     public Response uploadFile(File file) {
 
-        // TODO: Use RMI method in order to create the folder in the storage node
+        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
 
         Response response = new Response();
         response.statusCode = 500;
@@ -178,7 +178,7 @@ public class Service implements IService {
     @Override
     public Response downloadFile(File file) {
 
-        // TODO: Use RMI method in order to create the folder in the storage node
+        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
 
         return null;
     }
@@ -186,7 +186,7 @@ public class Service implements IService {
     @Override
     public Response moveFile(String routeName, int fileId) {
 
-        // TODO: Use RMI method in order to create the folder in the storage node
+        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
 
         Response response = new Response();
         response.statusCode = 500;
@@ -218,13 +218,15 @@ public class Service implements IService {
 
     @Override
     public Response deleteFolder(Folder folder) {
+        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
+        // TODO: Endpoint to delete folder [Waiting]
 
         return null;
     }
 
     @Override
     public Response deleteFile(File file) {
-        // TODO: Use RMI method in order to create the folder in the storage node
+        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
 
         Response response = new Response();
         response.statusCode = 500;
@@ -254,22 +256,26 @@ public class Service implements IService {
     }
 
     @Override
-    public Response shareFile(int userID) {
+    public Response shareFile(int userId, int fileId) {
+        // TODO: Endpoint to shareFile [Waiting]
 
         return null;
     }
 
     @Override
-    public Response stopSharingFile() {
+    public Response stopSharingFile(int fileId) {
+        // TODO: Endpoint to stopSharingFile [Waiting]
 
         return null;
     }
 
     @Override
-    public Response seeStorageTree() {
+    public Response seeStorageTree(int rootFolder) {
+        // TODO: Endpoint to delete folder [Waiting]
 
-            return null;
+        return null;
     }
+
 
     private HttpResponse<String> postRequest(String url, String body){
         try{

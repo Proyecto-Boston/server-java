@@ -32,10 +32,11 @@ public interface IService {
     Response deleteFile(File file);
     @WebMethod
     // * Share file or folder
-    Response shareFile(int userID);
+    Response shareFile(int userId, int fileId);
     @WebMethod
     // * Stop sharing file or folder
-    Response stopSharingFile();
+    Response stopSharingFile(int fileId);
     @WebMethod
-    Response seeStorageTree();
+    Response seeStorageTree(int rootFolder);
+    
 }
