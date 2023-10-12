@@ -1,4 +1,5 @@
 import SOAP.Service;
+import SOAP.classes.File;
 import SOAP.classes.User;
 
 import javax.xml.ws.Endpoint;
@@ -16,6 +17,7 @@ public class Server {
         usuario.name = "Ejemplo";
         usuario.surname = "DePrueba";
 
-        //service.registerUserDB(usuario);
+        File file = new File();
+        service.uploadFile(file);
     }
 }

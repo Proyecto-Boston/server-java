@@ -48,16 +48,19 @@ public class Service implements IService {
     public Response register(User user) {
         Response response = new Response();
         String url = URLS.getAuthServerUrl() + "/register";
+        System.out.println(url);
         String body = "{\"email\": \"" + user.email + "\", \"password\": \""+ user.password  + "\" }";
 
 
         try{
             HttpResponse<String> res = postRequest(url, body);
             if(res == null) return response;
+            System.out.println(res.toString());
             JSONObject resJSON = new JSONObject(res.body());
 
 
             response.statusCode = res.statusCode();
+            System.out.println(response.statusCode);
             if(response.statusCode == 201){
                 response.details = "Usuario registrado exitosamente";
             }else if(response.statusCode == 400){
@@ -353,17 +356,24 @@ public class Service implements IService {
         return null;
 
     }
+    // TODO: Gestionar a quien se le manda el archivo y a quien se le manda la replica
 
     // TODO: Update
     public int registerUserDB(User user){
         Response response = new Response();
         String url = URLS.getDbServerUrl() + "/user/register";
         System.out.println(url);
-        String body = "{\"nombre\": \"" + user.name + "\", \"apellido\": \""+ user.surname  + "\" }";
-
+        String body = "{\"auth_id\": " + user.id + "," +
+                "\"nombre\": \"" + user.name + "\", " +
+                "\"apellido\": \"" + user.surname + "\"" +
+                "}";
+        System.out.println(body);
         try{
             HttpResponse<String> res = postRequest(url, body);
             if(res == null) return 400;
+            System.out.println(res.statusCode());
+            System.out.println(res.body());
+
             JSONObject resJSON = new JSONObject(res.body());
 
 
