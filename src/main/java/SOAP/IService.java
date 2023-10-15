@@ -14,7 +14,6 @@ public interface IService {
     Response register(User user);
     @WebMethod
     Response verifySession(String token);
-
     @WebMethod
     Response createFolder(Folder folder);
     @WebMethod

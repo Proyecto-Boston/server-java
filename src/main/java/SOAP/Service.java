@@ -82,8 +82,6 @@ public class Service implements IService {
         Response response = new Response();
         String url = URLS.getAuthServerUrl() + "/auth";
         String body = "{\"token_jwt\": \"" + token + "\"}";
-
-
         try{
             HttpResponse<String> res = postRequest(url, body);
             if(res == null) return response;
@@ -92,7 +90,7 @@ public class Service implements IService {
 
             response.statusCode = res.statusCode();
             if(response.statusCode == 202){
-                response.details = "Token JWT valido";
+                response.details = resJSON.getString("id_user");
             }else if(response.statusCode == 400){
                 response.details = resJSON.getString("message");
             }
@@ -363,7 +361,7 @@ public class Service implements IService {
         Response response = new Response();
         String url = URLS.getDbServerUrl() + "/user/register";
         System.out.println(url);
-        String body = "{\"auth_id\": " + user.id + "," +
+        String body = "{\"auth_id\": " + user.getId() + "," +
                 "\"nombre\": \"" + user.name + "\", " +
                 "\"apellido\": \"" + user.surname + "\"" +
                 "}";
