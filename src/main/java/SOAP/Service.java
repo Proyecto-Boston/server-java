@@ -30,7 +30,7 @@ public class Service implements IService {
 
             response.statusCode = res.statusCode();
             if(response.statusCode == 202){
-                //response.json = "{\"token\": \"%s\"}".formatted(resJSON.getString("token_jwt"));
+                response.json = "{\"token\": \""+ resJSON.getString("token_jwt") +"\"}";
                 response.details = "Ingreso exitoso";
             }else if(response.statusCode == 400){
                 response.details = resJSON.getString("message");
