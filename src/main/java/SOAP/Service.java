@@ -90,7 +90,7 @@ public class Service implements IService {
 
             response.statusCode = res.statusCode();
             if(response.statusCode == 202){
-                response.details = resJSON.getString("id_user");
+                response.json = "{\"user_id\": " + resJSON.getInt("id_user")+ "}";
             }else if(response.statusCode == 400){
                 response.details = resJSON.getString("message");
             }
