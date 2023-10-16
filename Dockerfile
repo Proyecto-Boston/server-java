@@ -20,7 +20,7 @@ RUN mkdir -p bin && \
     javac -d bin -cp src/main/java src/main/java/SOAP/classes/URLS.java && \
     javac -d bin -cp src/main/java src/main/java/SOAP/classes/Response.java && \
     javac -d bin -cp src/main/java src/main/java/SOAP/classes/User.java && \
-    javac -d bin -cp src/main/java src/main/java/SOAP/classes/Service.java && \
+    javac -d bin -cp src/main/java src/main/java/SOAP/Service.java && \
     javac -d bin -cp src/main/java src/main/java/Server.java
 
 CMD ["java", "-cp", "bin", "Server"]
