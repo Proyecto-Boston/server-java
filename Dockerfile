@@ -14,6 +14,6 @@ COPY src ./src
 
 EXPOSE 1802
 
-RUN javac -d bin -cp src/main/java src/main/java/Server.java
+RUN javac -d bin -cp src/main/java/SOAP src/main/java/Server.java
 
 CMD ["java", "-cp","bin", "Server"]
