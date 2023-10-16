@@ -17,7 +17,7 @@ EXPOSE 1802
 RUN mkdir -p bin && \
     javac -d bin -cp src/main/java src/main/java/SOAP/classes/File.java && \
     javac -d bin -cp src/main/java src/main/java/SOAP/classes/Folder.java && \
-    javac -d bin -cp src/main/java src/main/java/SOAP/classes/URLs.java && \
+    javac -d bin -cp src/main/java src/main/java/SOAP/classes/URLS.java && \
     javac -d bin -cp src/main/java src/main/java/SOAP/classes/Response.java && \
     javac -d bin -cp src/main/java src/main/java/SOAP/classes/User.java && \
     javac -d bin -cp src/main/java src/main/java/SOAP/classes/Service.java && \
