@@ -1,6 +1,6 @@
 package SOAP;
 
-import SOAP.classes.*;
+import SOAP.model.*;
 import org.json.JSONObject;
 
 import javax.jws.WebService;
@@ -85,6 +85,7 @@ public class Service implements IService {
         try{
             HttpResponse<String> res = postRequest(url, body);
             if(res == null) return response;
+            System.out.println(res.statusCode());
             JSONObject resJSON = new JSONObject(res.body());
 
 
@@ -94,6 +95,7 @@ public class Service implements IService {
             }else if(response.statusCode == 400){
                 response.details = resJSON.getString("message");
             }
+            System.out.println(response.json);
             return response;
         }catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,6 @@
 package SOAP;
 
-import SOAP.classes.*;
+import SOAP.model.*;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
