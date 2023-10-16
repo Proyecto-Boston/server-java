@@ -14,6 +14,13 @@ COPY src ./src
 
 EXPOSE 1802
 
-RUN javac -d bin -cp src/main/java/SOAP src/main/java/Server.java
+RUN mkdir -p bin && \
+    javac -d bin -cp src/main/java src/main/java/SOAP/classes/File.java && \
+    javac -d bin -cp src/main/java src/main/java/SOAP/classes/Folder.java && \
+    javac -d bin -cp src/main/java src/main/java/SOAP/classes/URLs.java && \
+    javac -d bin -cp src/main/java src/main/java/SOAP/classes/Response.java && \
+    javac -d bin -cp src/main/java src/main/java/SOAP/classes/User.java && \
+    javac -d bin -cp src/main/java src/main/java/SOAP/classes/Service.java && \
+    javac -d bin -cp src/main/java src/main/java/Server.java
 
-CMD ["java", "-cp","bin", "Server"]
+CMD ["java", "-cp", "bin", "Server"]
