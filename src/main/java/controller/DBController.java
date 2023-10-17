@@ -158,7 +158,7 @@ public class DBController {
             response.statusCode = res.statusCode();
             if(response.statusCode == 200){
                 String fileArray = res.body();
-                if(fileArray.length() < 2){
+                if(fileArray.length() > 2){
                     response.details = "Operacion exitosa.";
                     response.json = "{ \"data\": " + res.body() + "}";
                     return response;
