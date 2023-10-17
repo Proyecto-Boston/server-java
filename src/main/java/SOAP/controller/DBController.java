@@ -147,7 +147,7 @@ public class DBController {
         return response;
     }
 
-    public Response getUserFiles(int userId){
+    public static Response getUserFiles(int userId){
         Response response = new Response();
         response.statusCode = 503;
         response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
@@ -180,6 +180,10 @@ public class DBController {
     }
 
     public static Response shareFile(int userId, int fileId){
+        return null;
+    }
+
+    public static Response stopSharingFile(int fileId){
         return null;
     }
 
