@@ -7,8 +7,14 @@ RUN mvn dependency:go-offline -B
 
 COPY src ./src
 
+COPY out/artifacts/BostonServer/server-java.jar out/artifacts/BostonServer/
+
+RUN chmod +x out/artifacts/BostonServer/server-java.jar
+
+
 RUN mvn package
 
 EXPOSE 1802
 
 CMD ["java", "-jar", "out/artifacts/BostonServer/server-java.jar"]
+
