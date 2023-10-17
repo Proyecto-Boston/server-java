@@ -1,4 +1,4 @@
-package SOAP.model;
+package model;
 
 public class URLS {
     private static String authServerUrl;

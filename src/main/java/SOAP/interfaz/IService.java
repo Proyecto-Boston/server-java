@@ -1,6 +1,10 @@
 package SOAP.interfaz;
 
 import SOAP.model.*;
+import model.File;
+import model.Folder;
+import model.Response;
+import model.User;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;

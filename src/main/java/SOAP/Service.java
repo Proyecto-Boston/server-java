@@ -1,16 +1,11 @@
 package SOAP;
 
-import SOAP.controller.AuthController;
-import SOAP.controller.DBController;
+import controller.AuthController;
+import controller.DBController;
 import SOAP.interfaz.IService;
-import SOAP.model.*;
-import org.json.JSONObject;
+import model.*;
 
 import javax.jws.WebService;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 @WebService
 public class Service implements IService {

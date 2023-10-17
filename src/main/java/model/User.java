@@ -1,4 +1,4 @@
-package SOAP.model;
+package model;
 
 public class User {
     private int id;

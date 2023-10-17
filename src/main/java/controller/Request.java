@@ -1,4 +1,4 @@
-package SOAP.controller;
+package controller;
 
 import java.net.URI;
 import java.net.http.HttpClient;

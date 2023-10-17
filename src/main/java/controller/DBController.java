@@ -1,9 +1,9 @@
-package SOAP.controller;
+package controller;
 
-import SOAP.model.File;
-import SOAP.model.Folder;
-import SOAP.model.Response;
-import SOAP.model.URLS;
+import model.File;
+import model.Folder;
+import model.Response;
+import model.URLS;
 import org.json.JSONObject;
 
 import java.net.http.HttpResponse;

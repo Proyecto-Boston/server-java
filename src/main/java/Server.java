@@ -1,6 +1,6 @@
 import SOAP.Service;
-import SOAP.model.File;
-import SOAP.model.User;
+import model.File;
+import model.User;
 
 import javax.xml.ws.Endpoint;
 

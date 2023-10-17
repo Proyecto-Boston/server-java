@@ -1,4 +1,4 @@
-package SOAP.controller;
+package controller;
 
 public class NodeController {
 }
