@@ -158,12 +158,14 @@ public class DBController {
             HttpResponse<String> res = Request.get(url);
             if(res == null) return response;
 
-            JSONObject resJSON = new JSONObject(res.body());
-
             response.statusCode = res.statusCode();
-            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
-            response.json = (response.statusCode == 200) ?  resJSON.toString() : resJSON.getString("message");
-
+            if(response.statusCode == 200){
+                response.details = "Operacion exitosa.";
+                response.json = "{ \"data\": " + res.body() + "}";
+            }else{
+                JSONObject resJSON = new JSONObject(res.body());
+                response.details = resJSON.getString("message");
+            }
             return response;
         }catch (Exception e) {
             e.printStackTrace();
