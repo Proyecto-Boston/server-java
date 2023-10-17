@@ -11,4 +11,4 @@ RUN mvn package
 
 EXPOSE 1802
 
-CMD ["java", "-jar", "target/BostonServer.jar"]
+CMD ["java", "-jar", "out/artifacts//BostonServer/server-java.jar"]
