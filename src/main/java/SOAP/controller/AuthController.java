@@ -41,7 +41,7 @@ public class AuthController {
     public static Response register(User user){
         Response response = new Response();
         response.statusCode = 503;
-        response.details = "El servicio actualmente no se encuentra disponible";
+        response.details = "El servicio actualmente no se encuentra disponible [GO]";
 
         String url = URLS.getAuthServerUrl() + "/register";
         System.out.println(url);

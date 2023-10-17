@@ -1,4 +1,189 @@
 package SOAP.controller;
 
+import SOAP.model.File;
+import SOAP.model.Folder;
+import SOAP.model.Response;
+import SOAP.model.URLS;
+import org.json.JSONObject;
+
+import java.net.http.HttpResponse;
+
 public class DBController {
+    public static int register(int userId){
+        int responseStatus = 503;
+
+        String url = URLS.getDbServerUrl() + "/user/register";
+        String body = "{\"auth_id\": " + userId + "}";
+        try{
+            HttpResponse<String> res = Request.post(url, body);
+            if(res == null) return responseStatus;
+
+            JSONObject resJSON = new JSONObject(res.body());
+
+            responseStatus = res.statusCode();
+            return responseStatus;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return responseStatus;
+    }
+
+    public static Response newFolder(Folder folder){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        String url = URLS.getDbServerUrl() + "/directory/saveDirectories";
+        String body = "[{" +
+                "\"nombre\": \"" + folder.name + "\", " +
+                "\"ruta\": \""+ folder.path  + "\"," +
+                "\"usuario_id\": "+ folder.userId  + "," +
+                "\"nodo_id\": "+ folder.nodeId  +  "," +
+                "}]";
+
+        try{
+            HttpResponse<String> res = Request.post(url, body);
+            if(res == null){ return response; }
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Solicitud invalida.";
+
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public static Response uploadFile(File file){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        String url = URLS.getDbServerUrl() + "/file/saveFiles";
+        String body = "[{" +
+                "\"nombre\": \"" + file.name + "\", " +
+                "\"ruta\": \""+ file.path  + "\" " +
+                "\"tamano\":" + file.size + "," +
+                "\"usuario_id\": "+ file.userId  + ", " +
+                "\"nodo_id\": "+ file.nodeId  + "," +
+                "\"directorio_id\": " + file.folderId + "," +
+                "}]";
+
+        try{
+            HttpResponse<String> res = Request.post(url, body);
+            if(res == null){ return response; }
+
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Solicitud invalida.";
+
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public static Response changeFilePath(String routeName, int fileId){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        String url = URLS.getDbServerUrl() + "/file/move";
+        System.out.println(url);
+        String body = "{" +
+                "\"nuevaRuta\": \""+ routeName  + "\" " +
+                "\"tamano\":" + fileId + "," +
+                "}";
+
+        try{
+            HttpResponse<String> res = Request.post(url, body);
+            if(res == null){ return response; }
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
+
+            System.out.println(response.statusCode);
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+
+    }
+
+
+    public static Response deleteFile(File file){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        String url = URLS.getDbServerUrl() + "/file/move";
+        String body = "{" +
+                "\"id\":" + file.id + "," +
+                "}";
+
+        try{
+            HttpResponse<String> res = Request.post(url, body);
+            if(res == null){ return response; }
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
+
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public Response getUserFiles(int userId){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        String url = URLS.getDbServerUrl() + "/file/user/" + userId;
+
+        try{
+            HttpResponse<String> res = Request.get(url);
+            if(res == null) return response;
+
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
+            response.json = (response.statusCode == 200) ?  resJSON.toString() : resJSON.getString("message");
+
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+
+    // TODO: ?????
+    // TODO: Check method arguments in Service.java file
+    public static Response deleteFolder(Folder folder){
+        return null;
+    }
+
+    public static Response shareFile(int userId, int fileId){
+        return null;
+    }
+
+    public static Response getStorageTree(int userId){
+        return null;
+    }
 }
