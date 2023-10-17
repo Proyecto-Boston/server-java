@@ -160,8 +160,13 @@ public class DBController {
 
             response.statusCode = res.statusCode();
             if(response.statusCode == 200){
-                response.details = "Operacion exitosa.";
-                response.json = "{ \"data\": " + res.body() + "}";
+                String fileArray = res.body();
+                if(fileArray.length() < 2){
+                    response.details = "Operacion exitosa.";
+                    response.json = "{ \"data\": " + res.body() + "}";
+                    return response;
+                }
+                response.details = "El usuario no tiene archivos";
             }else{
                 JSONObject resJSON = new JSONObject(res.body());
                 response.details = resJSON.getString("message");

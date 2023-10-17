@@ -1,6 +1,5 @@
 package soap.interfaz;
 
-import soap.model.*;
 import model.File;
 import model.Folder;
 import model.Response;
