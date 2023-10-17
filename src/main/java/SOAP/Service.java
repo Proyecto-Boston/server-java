@@ -1,5 +1,6 @@
 package SOAP;
 
+import SOAP.interfaz.IService;
 import SOAP.model.*;
 import org.json.JSONObject;
 

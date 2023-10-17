@@ -1,4 +1,4 @@
-package SOAP;
+package SOAP.interfaz;
 
 import SOAP.model.*;
 
