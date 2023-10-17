@@ -1,5 +1,7 @@
 package SOAP;
 
+import SOAP.controller.AuthController;
+import SOAP.controller.DBController;
 import SOAP.interfaz.IService;
 import SOAP.model.*;
 import org.json.JSONObject;
@@ -17,93 +19,31 @@ public class Service implements IService {
 
     @Override
     public Response login(User user) {
-        Response response = new Response();
-        response.statusCode = 400;
-        response.details = "Error al procesar la solicitud";
-
-        String url = URLS.getAuthServerUrl() + "/login";
-        String body = "{\"email\": \"" + user.email + "\", \"password\": \""+ user.password  + "\" }";
-
-        try{
-            HttpResponse<String> res = postRequest(url, body);
-            if(res == null) return response;
-            JSONObject resJSON = new JSONObject(res.body());
-
-            response.statusCode = res.statusCode();
-            if(response.statusCode == 202){
-                response.json = "{\"token\": \""+ resJSON.getString("token_jwt") +"\"}";
-                response.details = "Ingreso exitoso";
-            }else if(response.statusCode == 400){
-                response.details = resJSON.getString("message");
-            }
-
-            return response;
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        Response response = AuthController.login(user.email, user.password);
 
         return response;
     }
 
     @Override
     public Response register(User user) {
-        Response response = new Response();
-        String url = URLS.getAuthServerUrl() + "/register";
-        System.out.println(url);
-        String body = "{\"email\": \"" + user.email + "\", \"password\": \""+ user.password  + "\" }";
+        Response response = AuthController.register(user);
 
+        if(response.statusCode == 202){
+            int responseDB = DBController.register(user.getId());
 
-        try{
-            HttpResponse<String> res = postRequest(url, body);
-            if(res == null) return response;
-            System.out.println(res.toString());
-            JSONObject resJSON = new JSONObject(res.body());
-
-
-            response.statusCode = res.statusCode();
-            System.out.println(response.statusCode);
-            if(response.statusCode == 201){
-                response.details = "Usuario registrado exitosamente";
-            }else if(response.statusCode == 400){
-                response.details = resJSON.getString("message");
+            if(responseDB!= 202){
+                response.statusCode = 503;
+                response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
             }
-            System.out.println(response.details);
-            return response;
-        }catch (Exception e) {
-            e.printStackTrace();
         }
-        response.statusCode = 400;
-        response.details = "Error al procesar la solicitud";
-        System.out.println(response.details);
+
         return response;
     }
 
     @Override
-    public Response verifySession(String token) {
-        Response response = new Response();
-        String url = URLS.getAuthServerUrl() + "/auth";
-        String body = "{\"token_jwt\": \"" + token + "\"}";
-        try{
-            HttpResponse<String> res = postRequest(url, body);
-            if(res == null) return response;
-            System.out.println(res.statusCode());
-            JSONObject resJSON = new JSONObject(res.body());
+    public Response verifySession(String token){
+        Response response = AuthController.verifySession(token);
 
-
-            response.statusCode = res.statusCode();
-            if(response.statusCode == 202){
-                response.json = "{\"user_id\": " + resJSON.getInt("id_user")+ "}";
-            }else if(response.statusCode == 400){
-                response.details = resJSON.getString("message");
-            }
-            System.out.println(response.json);
-            return response;
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        response.statusCode = 400;
-        response.details = "Error al procesar la solicitud";
-        System.out.println(response.details);
         return response;
     }
 
@@ -358,35 +298,4 @@ public class Service implements IService {
 
     }
     // TODO: Gestionar a quien se le manda el archivo y a quien se le manda la replica
-
-    // TODO: Update
-    public int registerUserDB(User user){
-        Response response = new Response();
-        String url = URLS.getDbServerUrl() + "/user/register";
-        System.out.println(url);
-        String body = "{\"auth_id\": " + user.getId() + "," +
-                "\"nombre\": \"" + user.name + "\", " +
-                "\"apellido\": \"" + user.surname + "\"" +
-                "}";
-        System.out.println(body);
-        try{
-            HttpResponse<String> res = postRequest(url, body);
-            if(res == null) return 400;
-            System.out.println(res.statusCode());
-            System.out.println(res.body());
-
-            JSONObject resJSON = new JSONObject(res.body());
-
-
-            int statusCode = res.statusCode();
-
-            System.out.println(statusCode);
-            return statusCode;
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(400);
-        return 400;
-    }
 }
