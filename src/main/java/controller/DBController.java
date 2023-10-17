@@ -1,25 +1,22 @@
 package controller;
 
-import model.File;
-import model.Folder;
-import model.Response;
-import model.URLS;
+import model.*;
 import org.json.JSONObject;
 
 import java.net.http.HttpResponse;
 
 public class DBController {
-    public static int register(int userId){
+    public static int register(User user){
         int responseStatus = 503;
 
         String url = URLS.getDbServerUrl() + "/user/register";
-        String body = "{\"auth_id\": " + userId + "}";
+        String body = "{\"auth_id\": " + user.getId() + "," +
+                "\"nombre\": \"" + user.name + "\"," +
+                "\"apellido\": \"" + user.surname + "\"" +
+                "}";
         try{
             HttpResponse<String> res = Request.post(url, body);
             if(res == null) return responseStatus;
-
-            JSONObject resJSON = new JSONObject(res.body());
-
             responseStatus = res.statusCode();
             return responseStatus;
         }catch (Exception e) {

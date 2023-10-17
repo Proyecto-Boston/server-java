@@ -23,9 +23,8 @@ public class Service implements IService {
     public Response register(User user) {
         Response response = AuthController.register(user);
 
-        if(response.statusCode == 202){
-            int responseDB = DBController.register(user.getId());
-
+        if(response.statusCode == 201){
+            int responseDB = DBController.register(user);
             if(responseDB!= 202){
                 response.statusCode = 503;
                 response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
