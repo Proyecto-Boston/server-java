@@ -1,8 +1,8 @@
-package SOAP;
+package soap;
 
 import controller.AuthController;
 import controller.DBController;
-import SOAP.interfaz.IService;
+import soap.interfaz.IService;
 import model.*;
 
 import javax.jws.WebService;

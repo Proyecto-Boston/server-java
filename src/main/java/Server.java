@@ -1,4 +1,4 @@
-import SOAP.Service;
+import soap.Service;
 import model.File;
 import model.User;
 
