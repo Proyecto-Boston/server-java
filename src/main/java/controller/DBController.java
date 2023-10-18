@@ -37,6 +37,7 @@ public class DBController {
                 "\"ruta\": \""+ folder.path  + "\"," +
                 "\"usuario_id\": "+ folder.userId  + "," +
                 "\"nodo_id\": "+ folder.nodeId  +  "," +
+                "\"tamano\": "+ 0  +  "," +
                 "}]";
 
         try{
