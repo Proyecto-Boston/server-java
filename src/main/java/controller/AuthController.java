@@ -44,7 +44,6 @@ public class AuthController {
         response.details = "El servicio actualmente no se encuentra disponible [GO]";
 
         String url = URLS.getAuthServerUrl() + "/register";
-        System.out.println(url);
         String body = "{\"email\": \"" + user.email + "\", \"password\": \""+ user.password  + "\" }";
 
         try{
@@ -56,6 +55,7 @@ public class AuthController {
             response.statusCode = res.statusCode();
             if(response.statusCode == 201){
                 response.details = "Usuario registrado exitosamente";
+                user.setId(resJSON.getInt("user_id"));
             }else if(response.statusCode == 400){
                 response.details = resJSON.getString("message");
             }
