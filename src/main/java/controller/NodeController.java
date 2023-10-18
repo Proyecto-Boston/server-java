@@ -27,9 +27,9 @@ public class NodeController {
     // TODO: When a node ends a request it must be added to the list again
     // TODO: Redefine the methods (void) and think about the parameters
 
-    public String uploadFile(String fileName, String path, byte[] fileData){
+    public int uploadFile(String fileName, String path, byte[] fileData){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
-            return "No hay nodos disponibles";
+            return 500;
         }
 
         Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
@@ -51,14 +51,14 @@ public class NodeController {
                 availabeNodes.add(mainNode);
                 availabeNodes.add(backUpNode);
 
-                return mainResponse.details;
+                return mainResponse.statusCode;
             }
 
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        return "Error";
+        return 500;
     }
 
     public byte[] downloadFile(String path){

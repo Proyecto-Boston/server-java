@@ -5,7 +5,7 @@ public class File {
     public String name;
     public String path;
 
-    public double file;
+    public byte[] fileData;
     public double size;
     public int userId;
     public int folderId;
