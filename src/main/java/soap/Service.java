@@ -2,6 +2,7 @@ package soap;
 
 import controller.AuthController;
 import controller.DBController;
+import controller.NodeController;
 import soap.interfaz.IService;
 import model.*;
 
@@ -10,7 +11,11 @@ import javax.jws.WebService;
 @WebService
 public class Service implements IService {
 
-    public Service(){ URLS.init(); }
+    private final NodeController nodeController;
+    public Service(){
+        URLS.init();
+        nodeController= new NodeController();
+    }
 
     @Override
     public Response login(User user) {
@@ -45,48 +50,112 @@ public class Service implements IService {
 
     @Override
     public Response createFolder(Folder folder) {
-        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
         Response response = DBController.newFolder(folder);
+        if(response.statusCode == 200){
+            boolean result = nodeController.createFolder(folder.path);
 
+            if(!result){
+                response.statusCode = 500;
+                response.details = "Error [Nodos]";
+            }
+        }
         return response;
     }
 
     @Override
     public Response uploadFile(File file) {
-        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
         Response response = DBController.uploadFile(file);
+
+        if(response.statusCode == 200){
+            int result = nodeController.uploadFile(file.name, file.path, file.fileData);
+
+            if(result != 200){
+                response.statusCode = result;
+                response.details = "Error [Nodos]";
+            }
+        }
 
         return response;
     }
 
     @Override
     public Response downloadFile(File file) {
-        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
+        Response response = new Response();
+        byte[] fileData = nodeController.downloadFile(file.path);
 
-        return null;
+        if(fileData == null){
+            response.statusCode = 500;
+            response.details = "Error [Nodos]";
+        }else{
+            response.statusCode = 200;
+            response.details = "Descarga exitosa.";
+            response.fileData = fileData;
+        }
+
+        return response;
     }
 
+
+    // ! ----------CHECK-------------
+    // ? Delete in both nodes
     @Override
-    public Response moveFile(String routeName, int fileId) {
-        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
-        Response response = DBController.changeFilePath(routeName, fileId);
+    public Response deleteFile(File file) {
+        Response response = DBController.deleteFile(file);
+
+        if(response.statusCode == 200){
+            boolean result = nodeController.deleteFile(file.path);
+
+            if(!result){
+                response.statusCode = 500;
+                response.details = "Error [Nodos]";
+            }
+        }
+
+        return response;
+    }
+
+    // ! ----------CHECK-------------
+    // ? Move in both nodes
+    @Override
+    public Response moveFile(int fileId, String oldPath, String newPath ) {
+        Response response = DBController.changeFilePath(newPath, fileId);
+
+        if(response.statusCode == 200){
+            boolean result = nodeController.updateFilePath(oldPath, newPath);
+
+            if(!result){
+                response.statusCode = 500;
+                response.details = "Error [Nodos]";
+            }
+        }
 
         return response;
     }
 
     @Override
+    public Response getUserFiles(int userId){
+        Response response = DBController.getUserFiles(userId);
+
+        return response;
+    }
+
+    // ! DB ENDPOINTS??????????????????????????????
+
+    // ! ----------CHECK-------------
+    // ? Delete in both nodes
+    @Override
     public Response deleteFolder(Folder folder) {
-        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
         // TODO: Endpoint to delete folder [Waiting]
         Response response = DBController.deleteFolder(folder);
 
-        return response;
-    }
+        if(response.statusCode == 200){
+            boolean result = nodeController.deleteFolder(folder.path);
 
-    @Override
-    public Response deleteFile(File file) {
-        // TODO: Use RMI method in order to create the folder in the storage node [Waiting]
-        Response response = DBController.deleteFile(file);
+            if(!result){
+                response.statusCode = 500;
+                response.details = "Error [Nodos]";
+            }
+        }
 
         return response;
     }
@@ -114,12 +183,4 @@ public class Service implements IService {
 
         return response;
     }
-
-    @Override
-    public Response getUserFiles(int userId){
-        Response response = DBController.getUserFiles(userId);
-
-        return response;
-    }
-    // TODO: Gestionar a quien se le manda el archivo y a quien se le manda la replica
 }

@@ -61,6 +61,7 @@ public class NodeController {
         return 500;
     }
 
+    // ! Nodes can't be choosen randomly
     public byte[] downloadFile(String path){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return null;
@@ -95,6 +96,7 @@ public class NodeController {
         return null;
     }
 
+    // ! Nodes can't be choosen randomly
     public boolean updateFilePath(String path, String newPath){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return false;
@@ -129,6 +131,7 @@ public class NodeController {
         return false;
     }
 
+    // ! Nodes can't be choosen randomly
     public boolean deleteFile(String path){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return false;
@@ -162,6 +165,7 @@ public class NodeController {
 
         return false;
     }
+
 
     public boolean createFolder(String path){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
@@ -197,6 +201,7 @@ public class NodeController {
         return false;
     }
 
+    // ! Nodes can't be choosen randomly
     public boolean deleteFolder(String path){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return false;
