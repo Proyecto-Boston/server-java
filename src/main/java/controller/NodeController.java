@@ -1,19 +1,14 @@
 package controller;
 
+import model.Response;
 import node.Node;
 import node.NodeRequest;
-import rmi.IRMIService;
-import rmi.RMIClient;
 
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.*;
 
 public class NodeController {
 
@@ -32,7 +27,6 @@ public class NodeController {
     // TODO: When a node ends a request it must be added to the list again
     // TODO: Redefine the methods (void) and think about the parameters
 
-
     public String uploadFile(String fileName, String path, byte[] fileData){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return "No hay nodos disponibles";
@@ -41,10 +35,203 @@ public class NodeController {
         Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
         Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
 
-        Thread saveOnMain = new Thread();
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Callable<Response> main = new NodeRequest(1, mainNode, fileName, path, fileData);
+        Callable<Response> backUp = new NodeRequest(1, backUpNode, fileName, path, fileData);
+
+        Future<Response> mainRequest =  pool.submit(main);
+        Future<Response> backUpRequest =  pool.submit(backUp);
+
+        try {
+            Response mainResponse = mainRequest.get();
+            Response backResponse = backUpRequest.get();
+
+            if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
+                availabeNodes.add(mainNode);
+                availabeNodes.add(backUpNode);
+
+                return mainResponse.details;
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return "Error";
+    }
+
+    public byte[] downloadFile(String path){
+        if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
+            return null;
+        }
+
+        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
+        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Callable<Response> main = new NodeRequest(2, mainNode, path);
+        Callable<Response> backUp = new NodeRequest(2, mainNode, path);
+
+        Future<Response> mainRequest =  pool.submit(main);
+        Future<Response> backUpRequest =  pool.submit(backUp);
+
+        try {
+            Response mainResponse = mainRequest.get();
+            Response backResponse = backUpRequest.get();
+
+            if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
+                availabeNodes.add(mainNode);
+                availabeNodes.add(backUpNode);
+
+                return mainResponse.fileData;
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         return null;
     }
+
+    public boolean updateFilePath(String path, String newPath){
+        if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
+            return false;
+        }
+
+        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
+        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Callable<Response> main = new NodeRequest(3, mainNode, path, newPath);
+        Callable<Response> backUp = new NodeRequest(3, mainNode, path, newPath);
+
+        Future<Response> mainRequest =  pool.submit(main);
+        Future<Response> backUpRequest =  pool.submit(backUp);
+
+        try {
+            Response mainResponse = mainRequest.get();
+            Response backResponse = backUpRequest.get();
+
+            if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
+                availabeNodes.add(mainNode);
+                availabeNodes.add(backUpNode);
+
+                return true;
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+    public boolean deleteFile(String path){
+        if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
+            return false;
+        }
+
+        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
+        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Callable<Response> main = new NodeRequest(4, mainNode, path);
+        Callable<Response> backUp = new NodeRequest(4, mainNode, path);
+
+        Future<Response> mainRequest =  pool.submit(main);
+        Future<Response> backUpRequest =  pool.submit(backUp);
+
+        try {
+            Response mainResponse = mainRequest.get();
+            Response backResponse = backUpRequest.get();
+
+            if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
+                availabeNodes.add(mainNode);
+                availabeNodes.add(backUpNode);
+
+                return true;
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+    public boolean createFolder(String path){
+        if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
+            return false;
+        }
+
+        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
+        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Callable<Response> main = new NodeRequest(5, mainNode, path);
+        Callable<Response> backUp = new NodeRequest(5, mainNode, path);
+
+        Future<Response> mainRequest =  pool.submit(main);
+        Future<Response> backUpRequest =  pool.submit(backUp);
+
+        try {
+            Response mainResponse = mainRequest.get();
+            Response backResponse = backUpRequest.get();
+
+            if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
+                availabeNodes.add(mainNode);
+                availabeNodes.add(backUpNode);
+
+                return true;
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+    public boolean deleteFolder(String path){
+        if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
+            return false;
+        }
+
+        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
+        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Callable<Response> main = new NodeRequest(6, mainNode, path);
+        Callable<Response> backUp = new NodeRequest(6, mainNode, path);
+
+        Future<Response> mainRequest =  pool.submit(main);
+        Future<Response> backUpRequest =  pool.submit(backUp);
+
+        try {
+            Response mainResponse = mainRequest.get();
+            Response backResponse = backUpRequest.get();
+
+            if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
+                availabeNodes.add(mainNode);
+                availabeNodes.add(backUpNode);
+
+                return true;
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+
 
 
 

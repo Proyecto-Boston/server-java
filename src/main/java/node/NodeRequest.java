@@ -132,7 +132,7 @@ public class NodeRequest implements Callable<Response> {
         Response response = new Response();
         response.statusCode = 500;
         response.details = "Error al procesar la solicitud.";
-        
+
         boolean success;
 
         switch (request){
@@ -151,7 +151,7 @@ public class NodeRequest implements Callable<Response> {
                     response.fileData = fileData;
                 }
                 break;
-            case 3: // ! 3. Change file route
+            case 3: // ! 3. Change file path
                 success = updateFileRMI();
                 if(success){
                     response.statusCode = 200;
