@@ -18,9 +18,9 @@ import java.util.concurrent.RecursiveTask;
 public class NodeController {
 
     private List<Node> availabeNodes = new ArrayList<Node>();
-    private Node node1 = new Node(1,"127.0.0.1", 1111, 100);
-    private Node node2 = new Node(1,"127.0.0.1", 1111, 100);
-    private Node node3 = new Node(1,"127.0.0.1", 1111, 100);
+    private Node node1 = new Node(1,"192.168.1.200", 1099, 100);
+    private Node node2 = new Node(2,"192.168.1.201", 1099, 100);
+    private Node node3 = new Node(3,"192.168.1.202", 1099, 100);
     private Queue<NodeRequest> requests = new LinkedList<>();
 
     public NodeController(){
@@ -32,91 +32,29 @@ public class NodeController {
     // TODO: When a node ends a request it must be added to the list again
     // TODO: Redefine the methods (void) and think about the parameters
 
-    private IRMIService connectToNode(Node node) throws NotBoundException, RemoteException {
-        Registry registry = LocateRegistry.getRegistry(node.getIp(), node.getPort());
-        IRMIService rmiClient = (IRMIService) registry.lookup("node");
-
-        return rmiClient;
-    }
-
-
 
     public String uploadFile(String fileName, String path, byte[] fileData){
-        try {
-            if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
-                return "No hay nodos disponibles";
-            }
-
-
-            IRMIService rmiClient = connectToNode(node1);
-
-            int response = rmiClient.uploadFile(fileName, path, fileData);
-
-            if(response == 200){
-                return "Archivo subido exitosamente";
-            }
-            return "Error al subir el archivo";
-
-        } catch (NotBoundException | RemoteException e) {
-            throw new RuntimeException(e);
+        if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
+            return "No hay nodos disponibles";
         }
+
+        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
+        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+
+        Thread saveOnMain = new Thread();
+
+        return null;
     }
 
-    public byte[] downloadFile(String path){
-        try {
-            IRMIService rmiClient = connectToNode(node1);
 
-            byte[] response = rmiClient.downloadFile(path);
-            return response;
-        } catch (NotBoundException | RemoteException e) {
-            return null;
-        }
-    }
 
-    // * Or update file name
-    public boolean updateFilePath(String path, String newName){
-        try {
-            IRMIService rmiClient = connectToNode(node1);
 
-            boolean response = rmiClient.changeFilePath(path, newName);
-            return response;
-        } catch (NotBoundException | RemoteException e) {
-            return false;
-        }
-    }
 
-    public boolean deleteFile(String path){
-        try {
-            IRMIService rmiClient = connectToNode(node1);
 
-            boolean response = rmiClient.removeFile(path);
-            return response;
-        } catch (NotBoundException | RemoteException e) {
-            return false;
-        }
-    }
 
-    public boolean createFolder(String path){
-        try {
-            IRMIService rmiClient = connectToNode(node1);
 
-            boolean response = rmiClient.createDirectory(path);
-            return response;
-        } catch (NotBoundException | RemoteException e) {
-            return false;
-        }
-    }
 
-    public boolean deleteFolder(String path){
-        try {
-            IRMIService rmiClient = connectToNode(node1);
 
-            boolean response = rmiClient.removeFolder(path);
-            return response;
-        } catch (NotBoundException | RemoteException e) {
-            return false;
-        }
-    }
 
     private void checkQueue(){
 
