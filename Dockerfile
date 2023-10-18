@@ -1,4 +1,4 @@
-FROM maven:3.8.4-openjdk-17
+FROM maven:3.8.6-openjdk-11
 
 WORKDIR /app
 
@@ -12,9 +12,8 @@ COPY out/artifacts/BostonServer/server-java.jar out/artifacts/BostonServer/
 RUN chmod +x out/artifacts/BostonServer/server-java.jar
 
 
-RUN mvn package
+RUN mvn package -Dmaven.compiler.source=11 -Dmaven.compiler.target=11
 
 EXPOSE 1802
 
 CMD ["java", "-jar", "out/artifacts/BostonServer/server-java.jar"]
-
