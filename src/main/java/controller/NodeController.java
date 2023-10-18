@@ -37,7 +37,6 @@ public class NodeController {
         IRMIService rmiClient = (IRMIService) registry.lookup("node");
 
         return rmiClient;
-
     }
 
     public String uploadFile(String fileName, String path, byte[] fileData){
@@ -56,24 +55,60 @@ public class NodeController {
         }
     }
 
-    public void downloadFile(){ 
+    public byte[] downloadFile(String path){
+        try {
+            IRMIService rmiClient = connectToNode(node1);
 
+            byte[] response = rmiClient.downloadFile(path);
+            return response;
+        } catch (NotBoundException | RemoteException e) {
+            return null;
+        }
     }
 
-    public void updateFilePath(){
+    // * Or update file name
+    public boolean updateFilePath(String path, String newName){
+        try {
+            IRMIService rmiClient = connectToNode(node1);
 
+            boolean response = rmiClient.changeFilePath(path, newName);
+            return response;
+        } catch (NotBoundException | RemoteException e) {
+            return false;
+        }
     }
 
-    public void deleteFile(){
+    public boolean deleteFile(String path){
+        try {
+            IRMIService rmiClient = connectToNode(node1);
 
+            boolean response = rmiClient.removeFile(path);
+            return response;
+        } catch (NotBoundException | RemoteException e) {
+            return false;
+        }
     }
 
-    public void createFolder(){
+    public boolean createFolder(String path){
+        try {
+            IRMIService rmiClient = connectToNode(node1);
 
+            boolean response = rmiClient.createDirectory(path);
+            return response;
+        } catch (NotBoundException | RemoteException e) {
+            return false;
+        }
     }
 
-    public void deleteFolder(){
+    public boolean deleteFolder(String path){
+        try {
+            IRMIService rmiClient = connectToNode(node1);
 
+            boolean response = rmiClient.removeFolder(path);
+            return response;
+        } catch (NotBoundException | RemoteException e) {
+            return false;
+        }
     }
 
     private void checkQueue(){
