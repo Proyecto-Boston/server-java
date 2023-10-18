@@ -55,7 +55,7 @@ public class AuthController {
             response.statusCode = res.statusCode();
             if(response.statusCode == 201){
                 response.details = "Usuario registrado exitosamente";
-                user.setId(resJSON.getInt("user_id"));
+                response.json = ""+resJSON.getInt("user_id");
             }else if(response.statusCode == 400){
                 response.details = resJSON.getString("message");
             }

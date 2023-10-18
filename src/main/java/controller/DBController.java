@@ -6,11 +6,11 @@ import org.json.JSONObject;
 import java.net.http.HttpResponse;
 
 public class DBController {
-    public static int register(User user){
+    public static int register(User user, int userId){
         int responseStatus = 503;
 
         String url = URLS.getDbServerUrl() + "/user/register";
-        String body = "{\"auth_id\": " + user.getId() + "," +
+        String body = "{\"auth_id\": " + userId + "," +
                 "\"nombre\": \"" + user.name + "\"," +
                 "\"apellido\": \"" + user.surname + "\"" +
                 "}";
