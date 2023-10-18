@@ -39,8 +39,15 @@ public class NodeController {
         return rmiClient;
     }
 
+
+
     public String uploadFile(String fileName, String path, byte[] fileData){
         try {
+            if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
+                return "No hay nodos disponibles";
+            }
+
+
             IRMIService rmiClient = connectToNode(node1);
 
             int response = rmiClient.uploadFile(fileName, path, fileData);

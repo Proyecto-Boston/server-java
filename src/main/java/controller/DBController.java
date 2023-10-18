@@ -42,7 +42,6 @@ public class DBController {
         try{
             HttpResponse<String> res = Request.post(url, body);
             if(res == null){ return response; }
-            JSONObject resJSON = new JSONObject(res.body());
 
             response.statusCode = res.statusCode();
             response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Solicitud invalida.";
