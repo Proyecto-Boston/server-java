@@ -14,6 +14,6 @@ RUN chmod +x out/artifacts/BostonServer/server-java.jar
 
 RUN mvn package -Dmaven.compiler.source=11 -Dmaven.compiler.target=11
 
-EXPOSE 1802
+EXPOSE 80
 
 CMD ["java", "-jar", "out/artifacts/BostonServer/server-java.jar"]
