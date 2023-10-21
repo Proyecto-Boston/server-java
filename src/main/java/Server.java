@@ -7,8 +7,8 @@ import javax.xml.ws.Endpoint;
 
 public class Server {
     public static void main(String[] args) {
-        Endpoint.publish("http://207.248.81.74:80/app", new Service());
-        System.out.println("Servicio iniciado en: http://207.248.81.74:80/app");
+        Endpoint.publish("http://localhost:2376/app", new Service());
+        System.out.println("Servicio iniciado en: http://localhost:2376/app");
 
         Service service = new Service();
         User usuario = new User();
