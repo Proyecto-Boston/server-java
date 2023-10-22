@@ -67,6 +67,17 @@ public class NodeController {
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return null;
         }
+        int iMainNode = searchNode(node);
+        int ibackNode = searchNode(backNode);
+
+        Node worker;
+        if(iMainNode == -1 && ibackNode == -1){
+            return null;
+        }else if(iMainNode == -1){
+            worker = availabeNodes.get(ibackNode);
+        }else{
+            worker = availabeNodes.get(iMainNode);
+        }
 
         Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
         Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
@@ -74,7 +85,6 @@ public class NodeController {
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
         Callable<Response> main = new NodeRequest(2, mainNode, path);
-        Callable<Response> backUp = new NodeRequest(2, mainNode, path);
 
         Future<Response> mainRequest =  pool.submit(main);
         Future<Response> backUpRequest =  pool.submit(backUp);
