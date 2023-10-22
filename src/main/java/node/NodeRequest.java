@@ -3,6 +3,8 @@ package node;
 import model.Response;
 import rmi.IRMIService;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -54,8 +56,9 @@ public class NodeRequest implements Callable<Response> {
     private int uploadRMI(){
         try {
             IRMIService rmiClient = connectToNode(node);
-
+            System.out.println(rmiClient);
             int response = rmiClient.uploadFile(fileName, filePath, fileData);
+            System.out.println("Res RMI:"+response);
 
             return response;
         } catch (NotBoundException | RemoteException e) {
@@ -120,9 +123,15 @@ public class NodeRequest implements Callable<Response> {
     }
 
 
-    private IRMIService connectToNode(Node node) throws NotBoundException, RemoteException {
-        Registry registry = LocateRegistry.getRegistry(node.getIp(), node.getPort());
-        IRMIService rmiClient = (IRMIService) registry.lookup("node");
+    private IRMIService connectToNode(Node node) throws NotBoundException {
+//        Registry registry = LocateRegistry.getRegistry(node.getIp(), node.getPort());
+        IRMIService rmiClient = null;
+        try {
+            String name = "rmi://"+node.getIp()+":"+node.getPort()+"/node";
+            rmiClient = (IRMIService) Naming.lookup(name);
+        } catch (RemoteException | MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
 
         return rmiClient;
     }

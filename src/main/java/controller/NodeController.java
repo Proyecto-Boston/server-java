@@ -51,6 +51,7 @@ public class NodeController {
                 availabeNodes.add(mainNode);
                 availabeNodes.add(backUpNode);
 
+                System.out.println(availabeNodes.toString());
                 return mainResponse.statusCode;
             }
 
@@ -62,7 +63,7 @@ public class NodeController {
     }
 
     // ! Nodes can't be choosen randomly
-    public byte[] downloadFile(String path){
+    public byte[] downloadFile(int userId, int node, int backNode, String path){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return null;
         }
@@ -236,7 +237,15 @@ public class NodeController {
         return false;
     }
 
-
+    private int searchNode(int nodeId){
+        for (int i = 0; i < availabeNodes.size(); i++) {
+            availabeNodes.get(i);
+            if(availabeNodes.get(i).getId() == 1){
+                return i;
+            }
+        }
+        return -1;
+    }
 
 
 

@@ -60,7 +60,7 @@ public class DBController {
         response.statusCode = 503;
         response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
 
-        String url = URLS.getDbServerUrl() + "/file/saveFiles";
+        String url = URLS.getDbServerUrl() + "/file/save";
         String body = "[{" +
                 "\"nombre\": \"" + file.name + "\", " +
                 "\"ruta\": \""+ file.path  + "\" " +
@@ -73,7 +73,7 @@ public class DBController {
         try{
             HttpResponse<String> res = Request.post(url, body);
             if(res == null){ return response; }
-
+            System.out.println(res.body());
             response.statusCode = res.statusCode();
             response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Solicitud invalida.";
 

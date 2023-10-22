@@ -48,6 +48,8 @@ public class Service implements IService {
         return response;
     }
 
+    // ! ----------CHECK-------------
+    // ? Create in both nodes
     @Override
     public Response createFolder(Folder folder) {
         Response response = DBController.newFolder(folder);
@@ -64,16 +66,15 @@ public class Service implements IService {
 
     @Override
     public Response uploadFile(File file) {
-        Response response = DBController.uploadFile(file);
+        Response response = new Response();
+        int result = nodeController.uploadFile(file.name, file.path, file.fileData);
 
-        if(response.statusCode == 200){
-            int result = nodeController.uploadFile(file.name, file.path, file.fileData);
-
-            if(result != 200){
-                response.statusCode = result;
-                response.details = "Error [Nodos]";
-            }
+        if(result != 200){
+            response.statusCode = result;
+            response.details = "Error [Nodos]";
+            return  response;
         }
+        response = DBController.uploadFile(file);
 
         return response;
     }
@@ -81,7 +82,7 @@ public class Service implements IService {
     @Override
     public Response downloadFile(File file) {
         Response response = new Response();
-        byte[] fileData = nodeController.downloadFile(file.path);
+        byte[] fileData = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, file.path);
 
         if(fileData == null){
             response.statusCode = 500;

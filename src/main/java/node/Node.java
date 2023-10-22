@@ -29,4 +29,8 @@ public class Node {
         return storageCapacity;
     }
 
+    @Override
+    public String toString() {
+        return this.id + "";
+    }
 }
