@@ -67,7 +67,7 @@ public class Service implements IService {
     @Override
     public Response uploadFile(File file) {
         Response response = new Response();
-        int result = nodeController.uploadFile(file.name, file.path, file.fileData);
+        int result = nodeController.uploadFile(file.name, file.userId+"/"+file.path, file.fileData);
 
         if(result != 200){
             response.statusCode = result;

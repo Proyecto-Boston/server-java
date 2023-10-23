@@ -68,34 +68,28 @@ public class NodeController {
             return null;
         }
         int iMainNode = searchNode(node);
-        int ibackNode = searchNode(backNode);
+        int iBackNode = searchNode(backNode);
 
         Node worker;
-        if(iMainNode == -1 && ibackNode == -1){
+        if(iMainNode == -1 && iBackNode == -1){
             return null;
-        }else if(iMainNode == -1){
-            worker = availabeNodes.get(ibackNode);
+        }else if(iBackNode == -1){
+            worker = availabeNodes.remove(iMainNode);
         }else{
-            worker = availabeNodes.get(iMainNode);
+            worker = availabeNodes.remove(iBackNode);
         }
-
-        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
-        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
-        Callable<Response> main = new NodeRequest(2, mainNode, path);
+        Callable<Response> main = new NodeRequest(2, worker, userId+"/"+path);
 
         Future<Response> mainRequest =  pool.submit(main);
-        Future<Response> backUpRequest =  pool.submit(backUp);
 
         try {
             Response mainResponse = mainRequest.get();
-            Response backResponse = backUpRequest.get();
 
-            if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
-                availabeNodes.add(mainNode);
-                availabeNodes.add(backUpNode);
+            if(mainResponse.statusCode == 200 ){
+                availabeNodes.add(worker);
 
                 return mainResponse.fileData;
             }
@@ -250,7 +244,7 @@ public class NodeController {
     private int searchNode(int nodeId){
         for (int i = 0; i < availabeNodes.size(); i++) {
             availabeNodes.get(i);
-            if(availabeNodes.get(i).getId() == 1){
+            if(availabeNodes.get(i).getId() == nodeId){
                 return i;
             }
         }

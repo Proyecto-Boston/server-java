@@ -7,8 +7,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.concurrent.Callable;
 
 public class NodeRequest implements Callable<Response> {
@@ -56,9 +54,7 @@ public class NodeRequest implements Callable<Response> {
     private int uploadRMI(){
         try {
             IRMIService rmiClient = connectToNode(node);
-            System.out.println(rmiClient);
             int response = rmiClient.uploadFile(fileName, filePath, fileData);
-            System.out.println("Res RMI:"+response);
 
             return response;
         } catch (NotBoundException | RemoteException e) {
