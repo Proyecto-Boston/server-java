@@ -136,7 +136,6 @@ public class NodeController {
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
-        System.out.println(userId+"/"+path);
         Callable<Response> main = new NodeRequest(3, mainNode, userId+"/"+path, userId+"/"+newPath);
         Callable<Response> backUp = new NodeRequest(3, backUpNode, userId+"/"+path, userId+"/"+newPath);
 
@@ -164,18 +163,31 @@ public class NodeController {
     }
 
     // ! Nodes can't be choosen randomly
-    public boolean deleteFile(String path){
+    public Response deleteFile(int userId, int node, int backNode, String path){
+        Response response = new Response();
+        response.details = "Error en el servidor";
+        response.statusCode = 500;
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
-            return false;
+            response.details = "Nodos ocupados";
+            return response;
         }
 
-        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
-        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+        int iMainNode = searchNode(node);
+        int iBackNode = searchNode(backNode);
+
+        if(iMainNode == -1 || iBackNode == -1){
+            response.details = "Nodos ocupados";
+            return response;
+        }
+
+        Node mainNode = availabeNodes.remove(iMainNode);
+        Node backUpNode = availabeNodes.remove(iBackNode);
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
-        Callable<Response> main = new NodeRequest(4, mainNode, path);
-        Callable<Response> backUp = new NodeRequest(4, backUpNode, path);
+        Callable<Response> main = new NodeRequest(4, mainNode, userId+"/"+path );
+        Callable<Response> backUp = new NodeRequest(4, backUpNode, userId+"/"+path);
+
 
         Future<Response> mainRequest =  pool.submit(main);
         Future<Response> backUpRequest =  pool.submit(backUp);
@@ -188,14 +200,17 @@ public class NodeController {
                 availabeNodes.add(mainNode);
                 availabeNodes.add(backUpNode);
 
-                return true;
+                System.out.println(mainResponse.statusCode);
+                response.statusCode = mainResponse.statusCode;
+                response.details = mainResponse.details;
+                return response;
             }
 
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        return false;
+        return response;
     }
 
     // ! Nodes can't be choosen randomly

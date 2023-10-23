@@ -87,18 +87,16 @@ public class Service implements IService {
     }
 
 
-    // ! ----------CHECK-------------
-    // ? Delete in both nodes
     @Override
     public Response deleteFile(File file) {
         Response response = DBController.deleteFile(file);
 
         if(response.statusCode == 200){
-            boolean result = nodeController.deleteFile(file.path);
+            Response result = nodeController.deleteFile(file.userId, file.nodeId, file.backNodeId, file.path);
 
-            if(!result){
+            if(result.statusCode != 200){
                 response.statusCode = 500;
-                response.details = "Error [Nodos]";
+                response.details = "Eliminado de BD, pero no de los nodos.";
             }
         }
 

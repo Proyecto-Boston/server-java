@@ -121,18 +121,15 @@ public class DBController {
         response.statusCode = 503;
         response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
 
-        String url = URLS.getDbServerUrl() + "/file/move";
-        String body = "{" +
-                "\"id\":" + file.id + "," +
-                "}";
+        String url = URLS.getDbServerUrl() + "/file/delete";
+        String body = "[" +file.id+ "]";
 
         try{
-            HttpResponse<String> res = Request.post(url, body);
+            HttpResponse<String> res = Request.put(url, body);
             if(res == null){ return response; }
-            JSONObject resJSON = new JSONObject(res.body());
 
             response.statusCode = res.statusCode();
-            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
+            response.details = (response.statusCode == 200) ? "Operacion exitosa." : res.body();
 
             return response;
         }catch (Exception e) {
