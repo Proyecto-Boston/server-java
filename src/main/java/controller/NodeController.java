@@ -77,16 +77,16 @@ public class NodeController {
             response.details = "Nodos ocupados";
             return response;
         }
-        int iMainNode = searchNode(node);
-        int iBackNode = searchNode(backNode);
+        boolean iMainNode = searchNode(node);
+        boolean iBackNode = searchNode(backNode);
 
         Node worker;
-        if(iMainNode == -1 && iBackNode == -1){
+        if(!iMainNode && !iBackNode ){
             return null;
-        }else if(iBackNode == -1){
-            worker = availabeNodes.remove(iMainNode);
+        }else if(!iBackNode){
+            worker = getNode(node);
         }else{
-            worker = availabeNodes.remove(iBackNode);
+            worker = getNode(backNode);
         }
 
         ExecutorService pool = Executors.newFixedThreadPool(1);
@@ -123,16 +123,16 @@ public class NodeController {
             return response;
         }
 
-        int iMainNode = searchNode(node);
-        int iBackNode = searchNode(backNode);
+        boolean iMainNode = searchNode(node);
+        boolean iBackNode = searchNode(backNode);
 
-        if(iMainNode == -1 || iBackNode == -1){
+        if(!iMainNode && !iBackNode){
             response.details = "Nodos ocupados";
             return response;
         }
 
-        Node mainNode = availabeNodes.remove(iMainNode);
-        Node backUpNode = availabeNodes.remove(iBackNode);
+        Node mainNode = getNode(node);
+        Node backUpNode = getNode(backNode);
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
@@ -171,16 +171,16 @@ public class NodeController {
             return response;
         }
 
-        int iMainNode = searchNode(node);
-        int iBackNode = searchNode(backNode);
+        boolean iMainNode = searchNode(node);
+        boolean iBackNode = searchNode(backNode);
 
-        if(iMainNode == -1 || iBackNode == -1){
+        if(!iMainNode && !iBackNode){
             response.details = "Nodos ocupados";
             return response;
         }
 
-        Node mainNode = availabeNodes.remove(iMainNode);
-        Node backUpNode = availabeNodes.remove(iBackNode);
+        Node mainNode = getNode(node);
+        Node backUpNode = getNode(backNode);
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
@@ -255,18 +255,32 @@ public class NodeController {
     }
 
     // ! Nodes can't be choosen randomly
-    public boolean deleteFolder(String path){
+    public Response deleteFolder(int userId, int node, int backNode, String path){
+        Response response = new Response();
+        response.details = "Error en el servidor";
+        response.statusCode = 500;
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
-            return false;
+            response.details = "Nodos ocupados";
+            return response;
         }
 
-        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
-        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+        boolean iMainNode = searchNode(node);
+        boolean iBackNode = searchNode(backNode);
+
+        if(!iMainNode && !iBackNode){
+            response.details = "Nodos ocupados";
+            return response;
+        }
+
+        Node mainNode = getNode(node);
+        Node backUpNode = getNode(backNode);
+        System.out.println(mainNode.toString() + "++++" + backUpNode.toString());
+
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
-        Callable<Response> main = new NodeRequest(6, mainNode, path);
-        Callable<Response> backUp = new NodeRequest(6, mainNode, path);
+        Callable<Response> main = new NodeRequest(6, mainNode, userId+"/"+path+'/');
+        Callable<Response> backUp = new NodeRequest(6, backUpNode, userId+"/"+path+'/');
 
         Future<Response> mainRequest =  pool.submit(main);
         Future<Response> backUpRequest =  pool.submit(backUp);
@@ -274,31 +288,46 @@ public class NodeController {
         try {
             Response mainResponse = mainRequest.get();
             Response backResponse = backUpRequest.get();
+            System.out.println("CODE: "+mainResponse.statusCode);
+
 
             if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
                 availabeNodes.add(mainNode);
                 availabeNodes.add(backUpNode);
 
-                return true;
+                response.statusCode = mainResponse.statusCode;
+                response.details = mainResponse.details;
+                return response;
             }
 
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
+        return response;
+    }
+
+    private boolean searchNode(int nodeId){
+        System.out.println(availabeNodes.size());
+        for (int i = 0; i < availabeNodes.size(); i++) {
+
+            if(availabeNodes.get(i).getId() == nodeId){
+                System.out.println("SEARCH:  "+availabeNodes.get(i)+ "|| " + i);
+                return true;
+            }
+        }
         return false;
     }
 
-    private int searchNode(int nodeId){
+    private Node getNode(int nodeId){
         for (int i = 0; i < availabeNodes.size(); i++) {
-            availabeNodes.get(i);
             if(availabeNodes.get(i).getId() == nodeId){
-                return i;
+                System.out.println("REMMOVE:::"+availabeNodes.get(i));
+                return availabeNodes.remove(i);
             }
         }
-        return -1;
+        return null;
     }
-
 
 
 

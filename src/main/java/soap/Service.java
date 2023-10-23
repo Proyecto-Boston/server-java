@@ -129,23 +129,23 @@ public class Service implements IService {
         return response;
     }
 
+
+
     // ! DB ENDPOINTS??????????????????????????????
 
     // ! ----------CHECK-------------
     // ? Delete in both nodes
     @Override
     public Response deleteFolder(Folder folder) {
-        // TODO: Endpoint to delete folder [Waiting]
-        Response response = DBController.deleteFolder(folder);
+        Response result = nodeController.deleteFolder(folder.userId, folder.nodeId, folder.backNodeId, folder.path);
 
-        if(response.statusCode == 200){
-            boolean result = nodeController.deleteFolder(folder.path);
-
-            if(!result){
-                response.statusCode = 500;
-                response.details = "Error [Nodos]";
-            }
+        if(result.statusCode != 200){
+            return  result;
         }
+        folder.nodeId = result.mainNode;
+        folder.backNodeId = result.backUpNode;
+
+        Response response = DBController.newFolder(folder);
 
         return response;
     }

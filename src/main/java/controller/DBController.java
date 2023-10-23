@@ -203,10 +203,27 @@ public class DBController {
     }
 
 
-    // TODO: ?????
-    // TODO: Check method arguments in Service.java file
     public static Response deleteFolder(Folder folder){
-        return null;
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        String url = URLS.getDbServerUrl() + "/directory/delete";
+        String body = "" + folder.id;
+
+        try{
+            HttpResponse<String> res = Request.put(url, body);
+            if(res == null){ return response; }
+
+            response.statusCode = res.statusCode();
+            response.details = (response.statusCode == 201) ? "Operacion exitosa." : res.body();
+
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
     public static Response shareFile(int userId, int fileId){
