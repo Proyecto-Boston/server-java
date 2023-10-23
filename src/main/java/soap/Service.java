@@ -47,20 +47,19 @@ public class Service implements IService {
 
         return response;
     }
-
-    // ! ----------CHECK-------------
-    // ? Create in both nodes
+    
     @Override
     public Response createFolder(Folder folder) {
-        boolean result = nodeController.createFolder(folder.userId,folder.path);
-        Response response = new Response();
+        Response result = nodeController.createFolder(folder.userId,folder.path);
 
-        if(!result){
-            response.statusCode = 500;
-            response.details = "Error [Nodos]";
+        if(result.statusCode != 200){
+            return  result;
         }
+        folder.nodeId = result.mainNode;
+        folder.backNodeId = result.backUpNode;
 
-        response = DBController.newFolder(folder);
+        Response response = DBController.newFolder(folder);
+
         return response;
     }
 

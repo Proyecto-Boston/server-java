@@ -37,15 +37,17 @@ public class DBController {
                 "\"ruta\": \""+ folder.path  + "\"," +
                 "\"usuario_id\": "+ folder.userId  + "," +
                 "\"nodo_id\": "+ folder.nodeId  +  "," +
-                "\"tamano\": "+ 0  +  "," +
+                "\"respaldo_id\": "+ folder.backNodeId  +  "," +
+                "\"padre_id\": "+ 1  +
                 "}]";
 
         try{
             HttpResponse<String> res = Request.post(url, body);
             if(res == null){ return response; }
+            System.out.println(res.body());
 
             response.statusCode = res.statusCode();
-            response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Solicitud invalida.";
+            response.details = (response.statusCode == 201) ? "Operacion exitosa." : "Solicitud invalida.";
 
             return response;
         }catch (Exception e) {
@@ -67,6 +69,7 @@ public class DBController {
                 "\"tamano\":" + file.size + "," +
                 "\"usuario_id\": "+ file.userId  + ", " +
                 "\"nodo_id\": "+ file.nodeId  + "," +
+                "\"respaldo_id\": "+ file.backNodeId  + "," +
                 "\"directorio_id\": " + file.folderId + "," +
                 "}]";
 

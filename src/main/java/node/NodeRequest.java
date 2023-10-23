@@ -100,8 +100,9 @@ public class NodeRequest implements Callable<Response> {
     public boolean createFolderRMI(){
         try {
             IRMIService rmiClient = connectToNode(node);
-
+            System.out.println(rmiClient);
             boolean response = rmiClient.createDirectory(filePath); // FilePath represents the folderPath
+            System.out.println(response);
             return response;
         } catch (NotBoundException | RemoteException e) {
             return false;

@@ -162,7 +162,6 @@ public class NodeController {
         return response;
     }
 
-    // ! Nodes can't be choosen randomly
     public Response deleteFile(int userId, int node, int backNode, String path){
         Response response = new Response();
         response.details = "Error en el servidor";
@@ -213,10 +212,13 @@ public class NodeController {
         return response;
     }
 
-    // ! Nodes can't be choosen randomly
-    public boolean createFolder(int userId,String path){
+    public Response createFolder(int userId,String path){
+        Response response = new Response();
+        response.details = "Error en el servidor";
+        response.statusCode = 500;
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
-            return false;
+            response.details = "Nodos ocupados";
+            return response;
         }
 
         Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
@@ -225,7 +227,7 @@ public class NodeController {
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
         Callable<Response> main = new NodeRequest(5, mainNode, userId+"/"+path);
-        Callable<Response> backUp = new NodeRequest(5, mainNode, userId+"/"+path);
+        Callable<Response> backUp = new NodeRequest(5, backUpNode, userId+"/"+path);
 
         Future<Response> mainRequest =  pool.submit(main);
         Future<Response> backUpRequest =  pool.submit(backUp);
@@ -238,14 +240,18 @@ public class NodeController {
                 availabeNodes.add(mainNode);
                 availabeNodes.add(backUpNode);
 
-                return true;
+                response.statusCode = mainResponse.statusCode;
+                response.details = mainResponse.details;
+                response.mainNode = mainNode.getId();
+                response.backUpNode = backUpNode.getId();
+                return response;
             }
 
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        return false;
+        return response;
     }
 
     // ! Nodes can't be choosen randomly
