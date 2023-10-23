@@ -32,7 +32,7 @@ public class Service implements IService {
             int id = Integer.parseInt(response.json);
             System.out.println("IdUsuario: "+id);
             int responseDB = DBController.register(user, id);
-            if(responseDB!= 202){
+            if(responseDB!= 201){
                 response.statusCode = 503;
                 response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
             }
@@ -47,7 +47,7 @@ public class Service implements IService {
 
         return response;
     }
-    
+
     @Override
     public Response createFolder(Folder folder) {
         Response result = nodeController.createFolder(folder.userId,folder.path);
