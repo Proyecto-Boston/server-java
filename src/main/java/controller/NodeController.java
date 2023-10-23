@@ -254,7 +254,6 @@ public class NodeController {
         return response;
     }
 
-    // ! Nodes can't be choosen randomly
     public Response deleteFolder(int userId, int node, int backNode, String path){
         Response response = new Response();
         response.details = "Error en el servidor";

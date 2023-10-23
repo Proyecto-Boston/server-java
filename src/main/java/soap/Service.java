@@ -131,10 +131,6 @@ public class Service implements IService {
 
 
 
-    // ! DB ENDPOINTS??????????????????????????????
-
-    // ! ----------CHECK-------------
-    // ? Delete in both nodes
     @Override
     public Response deleteFolder(Folder folder) {
         Response result = nodeController.deleteFolder(folder.userId, folder.nodeId, folder.backNodeId, folder.path);
@@ -145,7 +141,7 @@ public class Service implements IService {
         folder.nodeId = result.mainNode;
         folder.backNodeId = result.backUpNode;
 
-        Response response = DBController.newFolder(folder);
+        Response response = DBController.deleteFolder(folder);
 
         return response;
     }

@@ -191,7 +191,7 @@ public class DBController {
                 file.size = resJSON.getDouble("tamano");
                 file.userId = resJSON.getInt("usuario_id");
                 file.nodeId = resJSON.getInt("nodo_id");
-                file.backNodeId = 2; // ! CAMBIARRRRRR
+                file.backNodeId = resJSON.getInt("respaldo_id");
                 return new File();
             }
             return null;
