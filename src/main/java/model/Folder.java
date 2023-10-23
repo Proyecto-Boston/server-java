@@ -7,4 +7,6 @@ public class Folder {
     public int userId;
     public int nodeId;
 
+    public int backNodeId;
+
 }

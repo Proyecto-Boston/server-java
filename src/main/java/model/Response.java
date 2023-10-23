@@ -6,4 +6,6 @@ public class Response {
     public String details;
     public String json;
     public byte[] fileData;
+    public int mainNode;
+    public int backUpNode;
 }

@@ -27,9 +27,13 @@ public class NodeController {
     // TODO: When a node ends a request it must be added to the list again
     // TODO: Redefine the methods (void) and think about the parameters
 
-    public int uploadFile(String fileName, String path, byte[] fileData){
+    public Response uploadFile(String fileName, String path, byte[] fileData){
+        Response response = new Response();
+        response.details = "Error en el servidor";
+        response.statusCode = 500;
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
-            return 500;
+            response.details = "Nodos ocupados";
+            return response;
         }
 
         Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
@@ -51,20 +55,27 @@ public class NodeController {
                 availabeNodes.add(mainNode);
                 availabeNodes.add(backUpNode);
 
-                System.out.println(availabeNodes.toString());
-                return mainResponse.statusCode;
+                response.statusCode = mainResponse.statusCode;
+                response.details = mainResponse.details;
+                response.mainNode = mainNode.getId();
+                response.backUpNode = backUpNode.getId();
+                return response;
             }
 
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        return 500;
+        return response;
     }
 
-    public byte[] downloadFile(int userId, int node, int backNode, String path){
-        if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
-            return null;
+    public Response downloadFile(int userId, int node, int backNode, String path){
+        Response response = new Response();
+        response.details = "Error en el servidor";
+        response.statusCode = 500;
+        if(availabeNodes.isEmpty()){
+            response.details = "Nodos ocupados";
+            return response;
         }
         int iMainNode = searchNode(node);
         int iBackNode = searchNode(backNode);
@@ -90,26 +101,34 @@ public class NodeController {
             if(mainResponse.statusCode == 200 ){
                 availabeNodes.add(worker);
 
-                return mainResponse.fileData;
+                response.statusCode = mainResponse.statusCode;
+                response.details = mainResponse.details;
+                response.fileData = mainResponse.fileData;
+                return response;
             }
 
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        return null;
+        return response;
     }
 
-    public boolean updateFilePath(int userId, int node, int backNode, String path, String newPath){
+    public Response updateFilePath(int userId, int node, int backNode, String path, String newPath){
+        Response response = new Response();
+        response.details = "Error en el servidor";
+        response.statusCode = 500;
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
-            return false;
+            response.details = "Nodos ocupados";
+            return response;
         }
 
         int iMainNode = searchNode(node);
         int iBackNode = searchNode(backNode);
 
         if(iMainNode == -1 || iBackNode == -1){
-            return false;
+            response.details = "Nodos ocupados";
+            return response;
         }
 
         Node mainNode = availabeNodes.remove(iMainNode);
@@ -132,14 +151,16 @@ public class NodeController {
                 availabeNodes.add(mainNode);
                 availabeNodes.add(backUpNode);
 
-                return true;
+                response.statusCode = mainResponse.statusCode;
+                response.details = mainResponse.details;
+                return response;
             }
 
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        return false;
+        return response;
     }
 
     // ! Nodes can't be choosen randomly
@@ -177,8 +198,8 @@ public class NodeController {
         return false;
     }
 
-
-    public boolean createFolder(String path){
+    // ! Nodes can't be choosen randomly
+    public boolean createFolder(int userId,String path){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return false;
         }
@@ -188,8 +209,8 @@ public class NodeController {
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
-        Callable<Response> main = new NodeRequest(5, mainNode, path);
-        Callable<Response> backUp = new NodeRequest(5, mainNode, path);
+        Callable<Response> main = new NodeRequest(5, mainNode, userId+"/"+path);
+        Callable<Response> backUp = new NodeRequest(5, mainNode, userId+"/"+path);
 
         Future<Response> mainRequest =  pool.submit(main);
         Future<Response> backUpRequest =  pool.submit(backUp);

@@ -52,7 +52,7 @@ public class Service implements IService {
     // ? Create in both nodes
     @Override
     public Response createFolder(Folder folder) {
-        boolean result = nodeController.createFolder(folder.path);
+        boolean result = nodeController.createFolder(folder.userId,folder.path);
         Response response = new Response();
 
         if(!result){
@@ -66,34 +66,24 @@ public class Service implements IService {
 
     @Override
     public Response uploadFile(File file) {
-        Response response = new Response();
-        int result = nodeController.uploadFile(file.name, file.userId+"/"+file.path, file.fileData);
+        Response result = nodeController.uploadFile(file.name, file.userId+"/"+file.path, file.fileData);
 
-        if(result != 200){
-            response.statusCode = result;
-            response.details = "Error [Nodos]";
-            return  response;
+        if(result.statusCode != 200){
+            return  result;
         }
-        response = DBController.uploadFile(file);
+        file.nodeId = result.mainNode;
+        file.backNodeId = result.backUpNode;
+
+        Response response = DBController.uploadFile(file);
 
         return response;
     }
 
     @Override
     public Response downloadFile(File file) {
-        Response response = new Response();
-        byte[] fileData = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, file.path);
+        Response nodeResponse = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, file.path);
 
-        if(fileData == null){
-            response.statusCode = 500;
-            response.details = "Error [Nodos]";
-        }else{
-            response.statusCode = 200;
-            response.details = "Descarga exitosa.";
-            response.fileData = fileData;
-        }
-
-        return response;
+        return nodeResponse;
     }
 
 
@@ -115,8 +105,6 @@ public class Service implements IService {
         return response;
     }
 
-    // ! ----------CHECK-------------
-    // ? Move in both nodes
     @Override
     public Response moveFile(int fileId, String oldPath, String newPath ) {
         File file = DBController.getFileById(fileId);
@@ -126,8 +114,8 @@ public class Service implements IService {
 
         if(file == null) return response;
 
-        boolean result = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, oldPath, newPath);
-        if(!result){
+        Response nodeResponse = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, oldPath, newPath);
+        if(nodeResponse.statusCode != 200){
             response.statusCode = 500;
             response.details = "Error [Nodos]";
             return response;
