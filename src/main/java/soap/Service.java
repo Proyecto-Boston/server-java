@@ -52,15 +52,15 @@ public class Service implements IService {
     // ? Create in both nodes
     @Override
     public Response createFolder(Folder folder) {
-        Response response = DBController.newFolder(folder);
-        if(response.statusCode == 200){
-            boolean result = nodeController.createFolder(folder.path);
+        boolean result = nodeController.createFolder(folder.path);
+        Response response = new Response();
 
-            if(!result){
-                response.statusCode = 500;
-                response.details = "Error [Nodos]";
-            }
+        if(!result){
+            response.statusCode = 500;
+            response.details = "Error [Nodos]";
         }
+
+        response = DBController.newFolder(folder);
         return response;
     }
 
@@ -119,16 +119,20 @@ public class Service implements IService {
     // ? Move in both nodes
     @Override
     public Response moveFile(int fileId, String oldPath, String newPath ) {
-        Response response = DBController.changeFilePath(newPath, fileId);
+        File file = DBController.getFileById(fileId);
+        Response response = new Response();
+        response.statusCode = 404;
+        response.details = "El archivo de id " + fileId + " no existe.";
 
-        if(response.statusCode == 200){
-            boolean result = nodeController.updateFilePath(oldPath, newPath);
+        if(file == null) return response;
 
-            if(!result){
-                response.statusCode = 500;
-                response.details = "Error [Nodos]";
-            }
+        boolean result = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, oldPath, newPath);
+        if(!result){
+            response.statusCode = 500;
+            response.details = "Error [Nodos]";
+            return response;
         }
+        response = DBController.changeFilePath(newPath, fileId);
 
         return response;
     }

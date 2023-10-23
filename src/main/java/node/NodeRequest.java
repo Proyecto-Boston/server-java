@@ -79,6 +79,7 @@ public class NodeRequest implements Callable<Response> {
             IRMIService rmiClient = connectToNode(node);
 
             boolean response = rmiClient.changeFilePath(filePath, newFilePath);
+            System.out.println(response);
             return response;
         } catch (NotBoundException | RemoteException e) {
             return false;

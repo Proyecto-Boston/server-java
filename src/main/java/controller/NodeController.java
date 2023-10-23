@@ -62,7 +62,6 @@ public class NodeController {
         return 500;
     }
 
-    // ! Nodes can't be choosen randomly
     public byte[] downloadFile(int userId, int node, int backNode, String path){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return null;
@@ -79,7 +78,7 @@ public class NodeController {
             worker = availabeNodes.remove(iBackNode);
         }
 
-        ExecutorService pool = Executors.newFixedThreadPool(2);
+        ExecutorService pool = Executors.newFixedThreadPool(1);
 
         Callable<Response> main = new NodeRequest(2, worker, userId+"/"+path);
 
@@ -101,19 +100,26 @@ public class NodeController {
         return null;
     }
 
-    // ! Nodes can't be choosen randomly
-    public boolean updateFilePath(String path, String newPath){
+    public boolean updateFilePath(int userId, int node, int backNode, String path, String newPath){
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
             return false;
         }
 
-        Node mainNode = availabeNodes.remove(availabeNodes.size() -1);
-        Node backUpNode = availabeNodes.remove(availabeNodes.size() -1);
+        int iMainNode = searchNode(node);
+        int iBackNode = searchNode(backNode);
+
+        if(iMainNode == -1 || iBackNode == -1){
+            return false;
+        }
+
+        Node mainNode = availabeNodes.remove(iMainNode);
+        Node backUpNode = availabeNodes.remove(iBackNode);
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
-        Callable<Response> main = new NodeRequest(3, mainNode, path, newPath);
-        Callable<Response> backUp = new NodeRequest(3, mainNode, path, newPath);
+        System.out.println(userId+"/"+path);
+        Callable<Response> main = new NodeRequest(3, mainNode, userId+"/"+path, userId+"/"+newPath);
+        Callable<Response> backUp = new NodeRequest(3, backUpNode, userId+"/"+path, userId+"/"+newPath);
 
         Future<Response> mainRequest =  pool.submit(main);
         Future<Response> backUpRequest =  pool.submit(backUp);
@@ -148,7 +154,7 @@ public class NodeController {
         ExecutorService pool = Executors.newFixedThreadPool(2);
 
         Callable<Response> main = new NodeRequest(4, mainNode, path);
-        Callable<Response> backUp = new NodeRequest(4, mainNode, path);
+        Callable<Response> backUp = new NodeRequest(4, backUpNode, path);
 
         Future<Response> mainRequest =  pool.submit(main);
         Future<Response> backUpRequest =  pool.submit(backUp);

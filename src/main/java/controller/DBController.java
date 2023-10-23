@@ -93,19 +93,19 @@ public class DBController {
         String url = URLS.getDbServerUrl() + "/file/move";
         System.out.println(url);
         String body = "{" +
+                "\"id\":" + fileId + "," +
                 "\"nuevaRuta\": \""+ routeName  + "\" " +
-                "\"tamano\":" + fileId + "," +
                 "}";
 
         try{
-            HttpResponse<String> res = Request.post(url, body);
+            HttpResponse<String> res = Request.put(url, body);
             if(res == null){ return response; }
             JSONObject resJSON = new JSONObject(res.body());
 
+            System.out.println(res.body());
             response.statusCode = res.statusCode();
-            response.details = (response.statusCode == 200) ? "Operacion exitosa." : resJSON.getString("message");
+            response.details = (response.statusCode == 201) ? "Operacion exitosa." : resJSON.getString("message");
 
-            System.out.println(response.statusCode);
             return response;
         }catch (Exception e) {
             e.printStackTrace();
@@ -172,6 +172,34 @@ public class DBController {
         }
 
         return response;
+    }
+
+    public static File getFileById(int fileId){
+        String url = URLS.getDbServerUrl() + "/file/" + fileId;
+
+
+        try{
+            HttpResponse<String> res = Request.get(url);
+            if(res == null) return null;
+
+            if(res.statusCode() == 200){
+                JSONObject resJSON = new JSONObject(res.body());
+                File file = new File();
+                file.path = resJSON.getString("ruta");
+                file.id = resJSON.getInt("id");
+                file.name = resJSON.getString("nombre");
+                file.size = resJSON.getDouble("tamano");
+                file.userId = resJSON.getInt("usuario_id");
+                file.nodeId = resJSON.getInt("nodo_id");
+                file.backNodeId = 2; // ! CAMBIARRRRRR
+                return new File();
+            }
+            return null;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 
