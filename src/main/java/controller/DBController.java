@@ -155,12 +155,20 @@ public class DBController {
 
             response.statusCode = res.statusCode();
             if(response.statusCode == 200){
+                String folders = getRootFolders(userId);
+
+
                 String fileArray = res.body();
+                System.out.println(res.body());
                 if(fileArray.length() > 2){
                     response.details = "Operacion exitosa.";
-                    response.json = "{ \"data\": " + res.body() + "}";
+
+                    response.json = "{ \"files\": " + res.body() + ","
+                    + folders + "}";
                     return response;
                 }
+                if(folders != null) response.json = "{ "+ folders + "}";
+
                 response.details = "El usuario no tiene archivos";
             }else{
                 JSONObject resJSON = new JSONObject(res.body());
@@ -174,9 +182,28 @@ public class DBController {
         return response;
     }
 
+    private static String getRootFolders(int userId){
+        String url = URLS.getDbServerUrl() + "/directory/buscarDirectorioRoot";
+        try{
+            HttpResponse<String> res = Request.post(url, userId + "");
+            if(res == null) return null;
+
+            if(res.statusCode() == 201){
+                String fileArray = res.body();
+                if(fileArray.length() > 2){
+                    String folder = "\"folders\": " + res.body();
+                    return folder;
+                }
+                return null;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static File getFileById(int fileId){
         String url = URLS.getDbServerUrl() + "/file/" + fileId;
-
 
         try{
             HttpResponse<String> res = Request.get(url);
