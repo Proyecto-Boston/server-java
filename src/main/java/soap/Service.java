@@ -129,6 +129,12 @@ public class Service implements IService {
         return response;
     }
 
+    @Override
+    public Response getSubFolderFiles(int folderId) {
+        Response response = DBController.getSubFolder(folderId);
+
+        return response;
+    }
 
 
     @Override

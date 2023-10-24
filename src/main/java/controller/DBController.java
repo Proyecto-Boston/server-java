@@ -26,19 +26,79 @@ public class DBController {
         return responseStatus;
     }
 
+    public static Response getSubFolder(int folderId){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        String url = URLS.getDbServerUrl() + "/directory/buscarSubDirectorio";
+
+        try{
+            HttpResponse<String> res = Request.post(url, ""+folderId);
+            if(res == null) return response;
+
+            response.statusCode = res.statusCode();
+            if(response.statusCode == 201){
+                String files = getSubFolderFiles(folderId);
+
+                String fileArray = res.body();
+                if(fileArray.length() > 2){
+                    response.details = "Operacion exitosa.";
+
+                    response.json = "{ \"folders\": " + res.body() + ","
+                            + files + "}";
+                    return response;
+                }
+                if(files != null) response.json = "{ "+ files + "}";
+
+                response.details = "El usuario no tiene archivos";
+            }else{
+                JSONObject resJSON = new JSONObject(res.body());
+                response.details = resJSON.getString("message");
+            }
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public static String getSubFolderFiles(int folderId){
+        String url = URLS.getDbServerUrl() + "/file/fileByDirectory/" + folderId;
+
+        try{
+            HttpResponse<String> res = Request.get(url);
+            if(res == null) return null;
+
+            if(res.statusCode() == 200){
+                String fileArray = res.body();
+                if(fileArray.length() > 2){
+                    String files = "\"files\": " + res.body();
+                    return files;
+                }
+                return null;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static Response newFolder(Folder folder){
         Response response = new Response();
         response.statusCode = 503;
         response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
 
-        String url = URLS.getDbServerUrl() + "/directory/saveDirectories";
+        String url = URLS.getDbServerUrl() + "/directory/saveSubDirectories";
         String body = "[{" +
                 "\"nombre\": \"" + folder.name + "\", " +
                 "\"ruta\": \""+ folder.path  + "\"," +
                 "\"usuario_id\": "+ folder.userId  + "," +
                 "\"nodo_id\": "+ folder.nodeId  +  "," +
                 "\"respaldo_id\": "+ folder.backNodeId  +  "," +
-                "\"padre_id\": "+ 1  +
+                "\"padre_id\": "+ folder.fatherId  +
                 "}]";
 
         try{

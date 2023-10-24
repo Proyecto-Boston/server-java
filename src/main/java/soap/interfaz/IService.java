@@ -42,4 +42,6 @@ public interface IService {
     Response seeStorageTree(int rootFolder);
     @WebMethod
     Response getUserFiles(int userId);
+    @WebMethod
+    Response getSubFolderFiles(int folderId);
 }
