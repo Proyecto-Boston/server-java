@@ -278,6 +278,7 @@ public class DBController {
                 file.size = resJSON.getDouble("tamano");
                 file.userId = resJSON.getInt("usuario_id");
                 file.nodeId = resJSON.getInt("nodo_id");
+                file.folderId = resJSON.getInt("directorio_id");
                 file.backNodeId = resJSON.getInt("respaldo_id");
                 return new File();
             }
