@@ -125,12 +125,12 @@ public class DBController {
         String url = URLS.getDbServerUrl() + "/file/save";
         String body = "[{" +
                 "\"nombre\": \"" + file.name + "\", " +
-                "\"ruta\": \""+ file.path  + "\" " +
+                "\"ruta\": \""+ file.path  + "\", " +
                 "\"tamano\":" + file.size + "," +
                 "\"usuario_id\": "+ file.userId  + ", " +
                 "\"nodo_id\": "+ file.nodeId  + "," +
                 "\"respaldo_id\": "+ file.backNodeId  + "," +
-                "\"directorio_id\": " + file.folderId + "," +
+                "\"directorio_id\": " + file.folderId +
                 "}]";
 
         try{

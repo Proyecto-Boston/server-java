@@ -67,7 +67,7 @@ public class Service implements IService {
     public Response uploadFile(File file) {
         Response result = nodeController.uploadFile(file.name, file.userId+"/"+file.path, file.fileData);
 
-        if(result.statusCode != 200){
+        if(result.statusCode != 201){
             return  result;
         }
         file.nodeId = result.mainNode;
@@ -79,7 +79,7 @@ public class Service implements IService {
     }
 
     @Override
-    public Response downloadFile(File file) {
+    public Response downloadFile(File file) { // ? int fileId
         Response nodeResponse = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, file.path);
 
         return nodeResponse;
@@ -87,7 +87,7 @@ public class Service implements IService {
 
 
     @Override
-    public Response deleteFile(File file) {
+    public Response deleteFile(File file) { // ? int fileId
         Response response = DBController.deleteFile(file);
 
         if(response.statusCode == 200){
@@ -103,7 +103,7 @@ public class Service implements IService {
     }
 
     @Override
-    public Response moveFile(int fileId, String oldPath, String newPath ) {
+    public Response moveFile(int fileId, String oldPath, String newPath ) { // ? int fileId
         File file = DBController.getFileById(fileId);
         Response response = new Response();
         response.statusCode = 404;
@@ -138,7 +138,7 @@ public class Service implements IService {
 
 
     @Override
-    public Response deleteFolder(Folder folder) {
+    public Response deleteFolder(Folder folder) { // ? int fileId
         Response result = nodeController.deleteFolder(folder.userId, folder.nodeId, folder.backNodeId, folder.path);
 
         if(result.statusCode != 200){
