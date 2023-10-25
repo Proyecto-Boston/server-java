@@ -31,6 +31,6 @@ public class Node {
 
     @Override
     public String toString() {
-        return this.id + "";
+        return this.id + " = " + this.ip +":"+this.port ;
     }
 }

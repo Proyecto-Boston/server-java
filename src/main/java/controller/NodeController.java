@@ -22,6 +22,7 @@ public class NodeController {
         availabeNodes.add(node1);
         availabeNodes.add(node2);
         availabeNodes.add(node3);
+        System.out.println(availabeNodes);
     }
 
     // TODO: When a node ends a request it must be added to the list again

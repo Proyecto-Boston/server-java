@@ -138,7 +138,7 @@ public class DBController {
             if(res == null){ return response; }
             System.out.println(res.body());
             response.statusCode = res.statusCode();
-            response.details = (response.statusCode == 200) ? "Operacion exitosa." : "Solicitud invalida.";
+            response.details = (response.statusCode == 201) ? "Operacion exitosa." : "Solicitud invalida.";
 
             return response;
         }catch (Exception e) {
