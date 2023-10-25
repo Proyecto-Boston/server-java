@@ -24,14 +24,14 @@ public interface IService {
     Response uploadFile(File file);
     @WebMethod
     // TODO: What does this method returns?
-    Response downloadFile(File file);
+    Response downloadFile(int fileId);
     @WebMethod
     // * Also works as rename file
-    Response moveFile(int fileId, String oldPath, String newPath);
+    Response moveFile(int fileId, String newPath);
     @WebMethod
-    Response deleteFolder(Folder folder);
+    Response deleteFolder(int fileId);
     @WebMethod
-    Response deleteFile(File file);
+    Response deleteFile(int fileId);
     @WebMethod
     // * Share file or folder
     Response shareFile(int userId, int fileId);
