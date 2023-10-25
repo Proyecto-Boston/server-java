@@ -67,7 +67,7 @@ public class Service implements IService {
     public Response uploadFile(File file) {
         Response result = nodeController.uploadFile(file.name, file.userId+"/"+file.path, file.fileData);
 
-        if(result.statusCode != 201){
+        if(result.statusCode != 200){
             return  result;
         }
         file.nodeId = result.mainNode;
