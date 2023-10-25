@@ -79,7 +79,14 @@ public class Service implements IService {
     }
 
     @Override
-    public Response downloadFile(File file) { // ? int fileId
+    public Response downloadFile(int fileId) {
+        File file = DBController.getFileById(fileId);
+
+        Response response = new Response();
+        response.statusCode = 404;
+        response.details = "El id dado no pertenece a ningun archivo.";
+
+        if(file == null) return response;
         Response nodeResponse = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, file.path);
 
         return nodeResponse;
@@ -87,7 +94,15 @@ public class Service implements IService {
 
 
     @Override
-    public Response deleteFile(File file) { // ? int fileId
+    public Response deleteFile(int fileId) {
+        File file = DBController.getFileById(fileId);
+
+        Response responseDB = new Response();
+        responseDB.statusCode = 404;
+        responseDB.details = "El id dado no pertenece a ningun archivo.";
+
+        if(file == null) return responseDB;
+
         Response response = DBController.deleteFile(file);
 
         if(response.statusCode == 200){
@@ -103,7 +118,7 @@ public class Service implements IService {
     }
 
     @Override
-    public Response moveFile(int fileId, String oldPath, String newPath ) { // ? int fileId
+    public Response moveFile(int fileId, String newPath ) { // ? int fileId
         File file = DBController.getFileById(fileId);
         Response response = new Response();
         response.statusCode = 404;
@@ -111,7 +126,7 @@ public class Service implements IService {
 
         if(file == null) return response;
 
-        Response nodeResponse = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, oldPath, newPath);
+        Response nodeResponse = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, file.path, newPath);
         if(nodeResponse.statusCode != 200){
             response.statusCode = 500;
             response.details = "Error [Nodos]";
@@ -138,7 +153,9 @@ public class Service implements IService {
 
 
     @Override
-    public Response deleteFolder(Folder folder) { // ? int fileId
+    public Response deleteFolder(int folderId) { // ? int fileId
+
+
         Response result = nodeController.deleteFolder(folder.userId, folder.nodeId, folder.backNodeId, folder.path);
 
         if(result.statusCode != 200){
