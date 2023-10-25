@@ -280,7 +280,7 @@ public class DBController {
                 file.nodeId = resJSON.getInt("nodo_id");
                 file.folderId = resJSON.getInt("directorio_id");
                 file.backNodeId = resJSON.getInt("respaldo_id");
-                return new File();
+                return file;
             }
             return null;
         }catch (Exception e) {
@@ -312,6 +312,34 @@ public class DBController {
         }
 
         return response;
+    }
+
+    public static Folder getFolderById(int folderId){
+        String url = URLS.getDbServerUrl() + "/directory/" + folderId;
+
+        try{
+            HttpResponse<String> res = Request.get(url);
+            if(res == null) return null;
+
+            if(res.statusCode() == 200){
+                JSONObject resJSON = new JSONObject(res.body());
+                Folder folder = new Folder();
+                folder.id = resJSON.getInt("id");
+                folder.name = resJSON.getString("nombre");
+                folder.path = resJSON.getString("ruta");
+                folder.userId = resJSON.getInt("usuario_id");
+                folder.size = resJSON.getDouble("tamano");
+                folder.nodeId = resJSON.getInt("nodo_id");
+                folder.fatherId = resJSON.getInt("padre_id");
+                folder.backNodeId = resJSON.getInt("respaldo_id");
+                return folder;
+            }
+            return null;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Response shareFile(int userId, int fileId){

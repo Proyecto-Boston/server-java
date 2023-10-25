@@ -5,9 +5,9 @@ public class Folder {
     public String name;
     public String path;
     public int userId;
+    public double size;
     public int nodeId;
     public int fatherId;
-
     public int backNodeId;
 
 }

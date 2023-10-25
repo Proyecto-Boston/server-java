@@ -154,7 +154,12 @@ public class Service implements IService {
 
     @Override
     public Response deleteFolder(int folderId) { // ? int fileId
+        Folder folder = DBController.getFolderById(folderId);
+        Response responseDB = new Response();
+        responseDB.statusCode = 404;
+        responseDB.details = "El archivo de id " + folderId + " no existe.";
 
+        if(folder == null) return responseDB;
 
         Response result = nodeController.deleteFolder(folder.userId, folder.nodeId, folder.backNodeId, folder.path);
 
