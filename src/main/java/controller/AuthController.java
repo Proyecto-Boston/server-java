@@ -11,7 +11,7 @@ public class AuthController {
     public static Response login(String email, String password){
         Response response = new Response();
         response.statusCode = 503;
-        response.details = "El servicio actualmente no se encuentra disponible";
+        response.details = "El servicio actualmente no se encuentra disponible [GO]";
 
         String url = URLS.getAuthServerUrl() + "/login";
         String body = "{\"email\": \"" + email + "\", \"password\": \""+ password  + "\" }";
@@ -70,7 +70,7 @@ public class AuthController {
     public static Response verifySession(String token){
         Response response = new Response();
         response.statusCode = 503;
-        response.details = "El servicio actualmente no se encuentra disponible";
+        response.details = "El servicio actualmente no se encuentra disponible [GO]";
 
         String url = URLS.getAuthServerUrl() + "/auth";
         String body = "{\"token_jwt\": \"" + token + "\"}";
@@ -85,6 +85,32 @@ public class AuthController {
             if(response.statusCode == 202){
                 response.json = "{\"user_id\": " + resJSON.getInt("id_user")+ "}";
                 response.details = "Token válido.";
+            }else if(response.statusCode == 400){
+                response.details = resJSON.getString("message");
+            }
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+    public static Response geIdbyEmail(String email){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [GO]";
+
+        String url = URLS.getAuthServerUrl() + "/user/find/email";
+        String body = "{\"User_email\": \"" + email + "\"}";
+        try{
+            HttpResponse<String> res = Request.post(url, body);
+            if(res == null) return response;
+            JSONObject resJSON = new JSONObject(res.body());
+
+            response.statusCode = res.statusCode();
+            if(response.statusCode == 202){
+                response.json = resJSON.getInt("id_user")+ "";
+                response.details = "El email se encuentra registrado.";
             }else if(response.statusCode == 400){
                 response.details = resJSON.getString("message");
             }
