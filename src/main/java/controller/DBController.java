@@ -240,7 +240,7 @@ public class DBController {
         return response;
     }
 
-    private static String getRootFolders(int userId){
+    public static String getRootFolders(int userId){
         String url = URLS.getDbServerUrl() + "/directory/buscarDirectorioRoot";
         try{
             HttpResponse<String> res = Request.post(url, userId + "");

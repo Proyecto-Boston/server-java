@@ -211,7 +211,16 @@ public class Service implements IService {
     @Override
     public Response seeStorageTree(int rootFolder) {
         // TODO: Endpoint to delete folder [Waiting]
-        Response response = DBController.stopSharingFile(rootFolder);
+        String data = DBController.getRootFolders(rootFolder);
+        Response response = new Response();
+        response.statusCode = 500;
+        response.details = "Error con scala";
+
+        if (data != null){
+            response.statusCode = 200;
+            response.details = "Proceso exitoso.";
+            response.json = "{" + data + "}";
+        }
 
         return response;
     }
