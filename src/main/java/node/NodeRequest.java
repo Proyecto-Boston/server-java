@@ -101,6 +101,7 @@ public class NodeRequest implements Callable<Response> {
         try {
             IRMIService rmiClient = connectToNode(node);
             boolean response = rmiClient.createDirectory(filePath); // FilePath represents the folderPath
+
             return response;
         } catch (NotBoundException | RemoteException e) {
             return false;

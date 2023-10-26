@@ -26,26 +26,30 @@ public class NodeController {
     private Queue<NodeRequest> requests = new LinkedList<>();
 
     public NodeController(){
-        availabeNodes.add(node1);
-        availabeNodes.add(node2);
-        availabeNodes.add(node3);
-        availabeNodes.add(node4);
-        availabeNodes.add(node5);
+        resetNodes();
 //        availabeNodes.add(node6);
 //        availabeNodes.add(node7);
 //        availabeNodes.add(node8);
 //        availabeNodes.add(node9);
 //        availabeNodes.add(node10);
 
-        System.out.println(availabeNodes);
     }
 
+    private void resetNodes(){
+        availabeNodes.clear();
+
+        availabeNodes.add(node1);
+        availabeNodes.add(node2);
+        availabeNodes.add(node3);
+        availabeNodes.add(node4);
+        availabeNodes.add(node5);
+    }
     // TODO: When a node ends a request it must be added to the list again
     // TODO: Redefine the methods (void) and think about the parameters
 
     public Response uploadFile(String fileName, String path, byte[] fileData){
         Response response = new Response();
-        response.details = "Error en el servidor";
+        response.details = "Error en el servidor [Nodos]";
         response.statusCode = 500;
         System.out.println(availabeNodes.toString());
         if(availabeNodes.isEmpty() || availabeNodes.size() < 2){
@@ -68,10 +72,9 @@ public class NodeController {
             Response mainResponse = mainRequest.get();
             Response backResponse = backUpRequest.get();
 
+            availabeNodes.add(mainNode);
+            availabeNodes.add(backUpNode);
             if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
-                availabeNodes.add(mainNode);
-                availabeNodes.add(backUpNode);
-
                 response.statusCode = mainResponse.statusCode;
                 response.details = mainResponse.details;
                 response.mainNode = mainNode.getId();
@@ -115,8 +118,8 @@ public class NodeController {
         try {
             Response mainResponse = mainRequest.get();
 
+            availabeNodes.add(worker);
             if(mainResponse.statusCode == 200 ){
-                availabeNodes.add(worker);
 
                 response.statusCode = mainResponse.statusCode;
                 response.details = mainResponse.details;
@@ -163,9 +166,9 @@ public class NodeController {
             Response mainResponse = mainRequest.get();
             Response backResponse = backUpRequest.get();
 
+            availabeNodes.add(mainNode);
+            availabeNodes.add(backUpNode);
             if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
-                availabeNodes.add(mainNode);
-                availabeNodes.add(backUpNode);
 
                 response.statusCode = mainResponse.statusCode;
                 response.details = mainResponse.details;
@@ -212,9 +215,9 @@ public class NodeController {
             Response mainResponse = mainRequest.get();
             Response backResponse = backUpRequest.get();
 
+            availabeNodes.add(mainNode);
+            availabeNodes.add(backUpNode);
             if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
-                availabeNodes.add(mainNode);
-                availabeNodes.add(backUpNode);
 
                 System.out.println(mainResponse.statusCode);
                 response.statusCode = mainResponse.statusCode;
@@ -253,9 +256,12 @@ public class NodeController {
         try {
             Response mainResponse = mainRequest.get();
             Response backResponse = backUpRequest.get();
+
+
+            System.out.println("NODO main: " + mainResponse.statusCode);
+            System.out.println("NODO back: " + backResponse.statusCode);
+            resetNodes();
             if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
-                availabeNodes.add(mainNode);
-                availabeNodes.add(backUpNode);
 
                 response.statusCode = mainResponse.statusCode;
                 response.details = mainResponse.details;
@@ -307,9 +313,8 @@ public class NodeController {
             System.out.println("CODE: "+mainResponse.statusCode);
 
 
+            resetNodes();
             if(mainResponse.statusCode == 200 && backResponse.statusCode == 200){
-                availabeNodes.add(mainNode);
-                availabeNodes.add(backUpNode);
 
                 response.statusCode = mainResponse.statusCode;
                 response.details = mainResponse.details;

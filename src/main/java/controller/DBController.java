@@ -97,14 +97,12 @@ public class DBController {
                 "\"ruta\": \""+ folder.path  + "\"," +
                 "\"usuario_id\": "+ folder.userId  + "," +
                 "\"nodo_id\": "+ folder.nodeId  +  "," +
-                "\"respaldo_id\": "+ folder.backNodeId  +  "," +
-                "\"padre_id\": "+ folder.fatherId  +
+                "\"padre_id\": "+ folder.fatherId + "," +
+                "\"respaldo_id\": "+ folder.backNodeId  +
                 "}]";
-
         try{
             HttpResponse<String> res = Request.post(url, body);
             if(res == null){ return response; }
-            System.out.println(res.body());
 
             response.statusCode = res.statusCode();
             response.details = (response.statusCode == 201) ? "Operacion exitosa." : "Solicitud invalida.";
