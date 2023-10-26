@@ -13,15 +13,15 @@ import java.util.concurrent.*;
 public class NodeController {
 
     private List<Node> availabeNodes = new ArrayList<Node>();
-    private Node node1 = new Node(1,"207.248.81.92", 1091, 100);
-    private Node node2 = new Node(2,"207.248.81.92", 1092, 100);
-    private Node node3 = new Node(3,"207.248.81.92", 1093, 100);
-    private Node node4 = new Node(4,"207.248.81.92", 1094, 100);
+    private Node node1 = new Node(1,"207.248.81.92", 1099, 100);
+    private Node node2 = new Node(2,"207.248.81.92", 1098, 100);
+    private Node node3 = new Node(3,"207.248.81.92", 1097, 100);
+    private Node node4 = new Node(4,"207.248.81.92", 1096, 100);
     private Node node5 = new Node(5,"207.248.81.92", 1095, 100);
-//    private Node node6 = new Node(6,"207.248.81.92", 1096, 100);
-//    private Node node7 = new Node(7,"207.248.81.92", 1097, 100);
-//    private Node node8 = new Node(8,"207.248.81.92", 1098, 100);
-//    private Node node9 = new Node(9,"207.248.81.92", 1099, 100);
+//    private Node node6 = new Node(6,"207.248.81.92", 1094, 100);
+//    private Node node7 = new Node(7,"207.248.81.92", 1093, 100);
+//    private Node node8 = new Node(8,"207.248.81.92", 1092, 100);
+//    private Node node9 = new Node(9,"207.248.81.92", 1091, 100);
 //    private Node node10 = new Node(10,"207.248.81.92", 1090, 100);
     private Queue<NodeRequest> requests = new LinkedList<>();
 
