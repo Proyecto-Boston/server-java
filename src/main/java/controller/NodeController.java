@@ -333,7 +333,6 @@ public class NodeController {
         for (int i = 0; i < availabeNodes.size(); i++) {
 
             if(availabeNodes.get(i).getId() == nodeId){
-                System.out.println("SEARCH:  "+availabeNodes.get(i)+ "|| " + i);
                 return true;
             }
         }
@@ -343,7 +342,6 @@ public class NodeController {
     private Node getNode(int nodeId){
         for (int i = 0; i < availabeNodes.size(); i++) {
             if(availabeNodes.get(i).getId() == nodeId){
-                System.out.println("REMMOVE:::"+availabeNodes.get(i));
                 return availabeNodes.remove(i);
             }
         }

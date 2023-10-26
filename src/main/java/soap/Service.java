@@ -90,9 +90,8 @@ public class Service implements IService {
         Response response = new Response();
         response.statusCode = 404;
         response.details = "El id dado no pertenece a ningun archivo.";
-
         if(file == null) return response;
-        Response nodeResponse = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, file.path);
+        Response nodeResponse = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, file.path + file.name);
 
         return nodeResponse;
     }
