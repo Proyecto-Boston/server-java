@@ -191,6 +191,11 @@ public class Service implements IService {
     @Override
     public Response shareFile(String userEmail, int fileId) {
         // TODO: Endpoint to shareFile [Waiting]
+        Response responseAuth = AuthController.geIdbyEmail(userEmail);
+
+        if(responseAuth.statusCode == 500) return responseAuth;
+        int userId = Integer.parseInt(responseAuth.json);
+
         Response response = DBController.shareFile(userId, fileId);
 
         return response;
