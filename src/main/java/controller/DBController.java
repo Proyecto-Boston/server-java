@@ -327,10 +327,10 @@ public class DBController {
                 folder.id = resJSON.getInt("id");
                 folder.name = resJSON.getString("nombre");
                 folder.path = resJSON.getString("ruta");
-                folder.userId = resJSON.getInt("usuario_id");
+                folder.userId = resJSON.getInt("usuarioId");
                 folder.size = resJSON.getDouble("tamano");
-                folder.nodeId = resJSON.getInt("nodo_id");
-                folder.fatherId = resJSON.getInt("padre_id");
+                folder.nodeId = resJSON.getInt("nodoId");
+                folder.fatherId = resJSON.getInt("padreId");
                 folder.backNodeId = resJSON.getInt("respaldo_id");
                 return folder;
             }
