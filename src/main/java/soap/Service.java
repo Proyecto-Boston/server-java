@@ -50,7 +50,12 @@ public class Service implements IService {
 
     @Override
     public Response createFolder(Folder folder) {
-        Response result = nodeController.createFolder(folder.userId,folder.path);
+        Response result;
+        if(folder.fatherId == 0){
+            result = nodeController.createFolder(folder.userId, folder.name);
+        }else{
+            result = nodeController.createFolder(folder.userId,folder.path);
+        }
 
         if(result.statusCode != 200){
             return  result;
