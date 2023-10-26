@@ -36,7 +36,7 @@ public interface IService {
     Response getSharedFiles(int userId);
     @WebMethod
     // * Share file or folder
-    Response shareFile(int userId, int fileId);
+    Response shareFile(String userEmail, int fileId);
     @WebMethod
     // * Stop sharing file or folder
     Response stopSharingFile(int fileId);

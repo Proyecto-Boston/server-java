@@ -189,7 +189,7 @@ public class Service implements IService {
     }
 
     @Override
-    public Response shareFile(int userId, int fileId) {
+    public Response shareFile(String userEmail, int fileId) {
         // TODO: Endpoint to shareFile [Waiting]
         Response response = DBController.shareFile(userId, fileId);
 
