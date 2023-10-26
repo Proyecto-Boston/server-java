@@ -348,7 +348,7 @@ public class DBController {
 
         try{
             HttpResponse<String> res = Request.get(url);
-            if(res == null) return null;
+            if(res == null) return response;
 
             response.statusCode = res.statusCode();
             response.details = "No existen archivos compartidos para ese usuario.";
@@ -357,12 +357,12 @@ public class DBController {
                 response.json = res.body();
                 return response;
             }
-            return null;
+            return response;
         }catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        return response;
     }
     public static Response shareFile(int userId, int fileId){
         Response response = new Response();
