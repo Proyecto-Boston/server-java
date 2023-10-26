@@ -342,15 +342,69 @@ public class DBController {
         return null;
     }
 
-    public static Response shareFile(int userId, int fileId){
+    public static Response getSharedFiles(int userId){
+        String url = URLS.getDbServerUrl() + "/shared/" + userId;
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        try{
+            HttpResponse<String> res = Request.get(url);
+            if(res == null) return null;
+
+            response.statusCode = res.statusCode();
+            response.details = "No existen archivos compartidos para ese usuario.";
+            if(response.statusCode == 200){
+                response.details = "Operacion exitosa.";
+                response.json = res.body();
+                return response;
+            }
+            return null;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
+    }
+    public static Response shareFile(int userId, int fileId){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
+
+        String url = URLS.getDbServerUrl() + "/shared/register";
+        System.out.println(url);
+        String body = "{" +
+                "\"usuario_id\":" + userId + "," +
+                "\"archivo_id\": \""+ fileId  + "\" " +
+                "}";
+
+        try{
+            HttpResponse<String> res = Request.post(url, body);
+            if(res == null){ return response; }
+
+            response.statusCode = res.statusCode();
+            response.details = res.body() + "[SCALA]";
+
+            if(response.statusCode == 201){
+                response.details = "Operacion exitosa.";
+                response.json = res.body();
+            }
+
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
     public static Response stopSharingFile(int fileId){
+
         return null;
     }
 
     public static Response getStorageTree(int userId){
+
         return null;
     }
 }
