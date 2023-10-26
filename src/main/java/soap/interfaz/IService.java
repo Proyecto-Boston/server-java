@@ -33,6 +33,8 @@ public interface IService {
     @WebMethod
     Response deleteFile(int fileId);
     @WebMethod
+    Response getSharedFiles(int userId);
+    @WebMethod
     // * Share file or folder
     Response shareFile(int userId, int fileId);
     @WebMethod

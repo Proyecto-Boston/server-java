@@ -180,6 +180,13 @@ public class Service implements IService {
     }
 
     @Override
+    public Response getSharedFiles(int userId){
+        Response response = DBController.getSharedFiles(userId);
+
+        return response;
+    }
+
+    @Override
     public Response shareFile(int userId, int fileId) {
         // TODO: Endpoint to shareFile [Waiting]
         Response response = DBController.shareFile(userId, fileId);
