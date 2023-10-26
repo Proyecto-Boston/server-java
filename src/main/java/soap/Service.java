@@ -131,7 +131,7 @@ public class Service implements IService {
 
         if(file == null) return response;
 
-        Response nodeResponse = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, file.path, newPath);
+        Response nodeResponse = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, file.path + file.name, newPath + file.name);
         if(nodeResponse.statusCode != 200){
             response.statusCode = 500;
             response.details = "Error [Nodos]";
@@ -165,6 +165,8 @@ public class Service implements IService {
         responseDB.details = "El archivo de id " + folderId + " no existe.";
 
         if(folder == null) return responseDB;
+        System.out.println(folder.nodeId);
+        System.out.println(folder.backNodeId);
 
         Response result = nodeController.deleteFolder(folder.userId, folder.nodeId, folder.backNodeId, folder.path);
 
