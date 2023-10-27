@@ -103,7 +103,7 @@ public class DBController {
         try{
             HttpResponse<String> res = Request.post(url, body);
             if(res == null){ return response; }
-
+            System.out.println(res.body());
             response.statusCode = res.statusCode();
             response.details = (response.statusCode == 201) ? "Operacion exitosa." : "Solicitud invalida.";
 
@@ -146,7 +146,7 @@ public class DBController {
         return response;
     }
 
-    public static Response changeFilePath(String routeName, int fileId){
+    public static Response changeFilePath(String routeName, int fileId, int newFileId){
         Response response = new Response();
         response.statusCode = 503;
         response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
@@ -155,7 +155,9 @@ public class DBController {
         System.out.println(url);
         String body = "{" +
                 "\"id\":" + fileId + "," +
+                "\"directorio_id\":" + newFileId + "," +
                 "\"nuevaRuta\": \""+ routeName  + "\" " +
+
                 "}";
 
         try{
@@ -397,12 +399,35 @@ public class DBController {
     }
 
     public static Response stopSharingFile(int fileId){
+        Response response = new Response();
+        response.statusCode = 503;
+        response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
 
-        return null;
+        String url = URLS.getDbServerUrl() + "/shared/register";
+        System.out.println(url);
+        String body = "{" +
+                "\"usuario_id\":" + userId + "," +
+                "\"archivo_id\": \""+ fileId  + "\" " +
+                "}";
+
+        try{
+            HttpResponse<String> res = Request.post(url, body);
+            if(res == null){ return response; }
+
+            response.statusCode = res.statusCode();
+            response.details = res.body() + "[SCALA]";
+
+            if(response.statusCode == 201){
+                response.details = "Operacion exitosa.";
+                response.json = res.body();
+            }
+
+            return response;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
-    public static Response getStorageTree(int userId){
-
-        return null;
-    }
 }

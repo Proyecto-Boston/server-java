@@ -122,7 +122,7 @@ public class Service implements IService {
     }
 
     @Override
-    public Response moveFile(int fileId, String newPath ) { // ? int fileId
+    public Response moveFile(int fileId, int newFolderId, String newPath ) { // ? int fileId
         File file = DBController.getFileById(fileId);
         Response response = new Response();
         response.statusCode = 404;
@@ -136,7 +136,7 @@ public class Service implements IService {
             response.details = "Error [Nodos]";
             return response;
         }
-        response = DBController.changeFilePath(newPath, fileId);
+        response = DBController.changeFilePath(newPath, fileId, newFolderId);
 
         return response;
     }

@@ -27,7 +27,7 @@ public interface IService {
     Response downloadFile(int fileId);
     @WebMethod
     // * Also works as rename file
-    Response moveFile(int fileId, String newPath);
+    Response moveFile(int fileId, int newFolderId, String newPath);
     @WebMethod
     Response deleteFolder(int fileId);
     @WebMethod
