@@ -403,11 +403,10 @@ public class DBController {
         response.statusCode = 503;
         response.details = "El servicio actualmente no se encuentra disponible [SCALA]";
 
-        String url = URLS.getDbServerUrl() + "/shared/register";
+        String url = URLS.getDbServerUrl() + "/shared/delete";
         System.out.println(url);
         String body = "{" +
-                "\"usuario_id\":" + userId + "," +
-                "\"archivo_id\": \""+ fileId  + "\" " +
+                "\"id\":" + fileId +
                 "}";
 
         try{
@@ -415,11 +414,10 @@ public class DBController {
             if(res == null){ return response; }
 
             response.statusCode = res.statusCode();
-            response.details = res.body() + "[SCALA]";
+            response.details =  "Error al eliminar el archivo [SCALA]";
 
             if(response.statusCode == 201){
                 response.details = "Operacion exitosa.";
-                response.json = res.body();
             }
 
             return response;
