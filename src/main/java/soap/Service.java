@@ -54,7 +54,8 @@ public class Service implements IService {
         if(folder.fatherId == 0){
             result = nodeController.createFolder(folder.userId, folder.name);
         }else{
-            result = nodeController.createFolder(folder.userId,folder.path);
+            String checkedPath = checkPath(folder.fatherId, folder.path);
+            result = nodeController.createFolder(folder.userId,checkedPath + folder.name);
         }
 
         if(result.statusCode != 200){
