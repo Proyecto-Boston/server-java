@@ -78,6 +78,8 @@ public class Service implements IService {
         file.nodeId = result.mainNode;
         file.backNodeId = result.backUpNode;
 
+        file.path = checkPath(file.folderId, file.path);
+
         Response response = DBController.uploadFile(file);
 
         return response;
@@ -91,7 +93,9 @@ public class Service implements IService {
         response.statusCode = 404;
         response.details = "El id dado no pertenece a ningun archivo.";
         if(file == null) return response;
-        Response nodeResponse = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, file.path + file.name);
+        String checkedPath = checkPath(file.folderId, file.path);
+        System.out.println(checkedPath);
+        Response nodeResponse = nodeController.downloadFile(file.userId, file.nodeId, file.backNodeId, checkedPath + file.name);
 
         return nodeResponse;
     }
@@ -130,7 +134,8 @@ public class Service implements IService {
 
         if(file == null) return response;
 
-        Response nodeResponse = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, file.path + file.name, newPath + file.name);
+        String checkedPath = checkPath(file.folderId, file.path);
+        Response nodeResponse = nodeController.updateFilePath(file.userId, file.nodeId, file.backNodeId, checkedPath + file.name, newPath + file.name);
         if(nodeResponse.statusCode != 200){
             response.statusCode = 500;
             response.details = "Error [Nodos]";
@@ -223,5 +228,19 @@ public class Service implements IService {
         }
 
         return response;
+    }
+
+    private String checkPath(int padreId, String path){
+        if(padreId != 0){
+            char lastChar = path.charAt(path.length() -1 );
+            char secondLastChar = path.charAt(path.length() -2 );
+            if(lastChar != '/' && secondLastChar != '/'){
+                return path + "/";
+            }else if(lastChar == '/' && secondLastChar == '/'){
+                return path.substring(0, path.length() - 1);
+            }
+
+        }
+        return path;
     }
 }
